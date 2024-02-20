@@ -1,6 +1,6 @@
 <?php
 
-namespace Kompo\Auth;
+namespace Kompo\Tasks;
 
 use Illuminate\Support\ServiceProvider;
 
