@@ -12,13 +12,11 @@ class TaskDetailsList extends Query
 
     protected $taskId;
     protected $taskCardId;
-    protected $forProjectHistory;
 
     public function created()
     {
         $this->taskId = $this->store('task_id');
         $this->taskCardId = $this->store('task_card_id');
-        $this->forProjectHistory = $this->store('project_history') ?: false;
 
         $this->id('task-details-list-'.$this->taskId);
     }
@@ -39,17 +37,10 @@ class TaskDetailsList extends Query
         $form = (new TaskDetailForm(null, [
             'task_id' => $this->taskId,
             'task_card_id' => $this->taskCardId,
-            'file_initial_toggle' => $this->forProjectHistory ? false : true,
+            'file_initial_toggle' => true,
         ]))->id($toggleId);
 
-        return !$this->forProjectHistory ? $form->class('bg-gray-100 border-b border-gray-200 p-4') :
-
-            _Rows(
-                _Link('Add')->icon(_Sax('add'))
-                    ->class('absolute right-0')->style('top:-2.4rem')
-                    ->toggleId($toggleId),
-                $form
-            )->class('relative');
+        return $form->class('bg-gray-100 border-b border-gray-200 p-4');
     }
 
     public function render($td)
@@ -102,7 +93,7 @@ class TaskDetailsList extends Query
     {
         return new TaskDetailForm($id, [
             'task_card_id' => $this->taskCardId,
-            'no_task_closing' => $this->forProjectHistory,
+            'no_task_closing' => false,
             'injected_class' => 'm-4 py-4 card-white',
         ]);
     }

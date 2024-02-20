@@ -53,7 +53,9 @@ class TaskDetailForm extends Form
 
 	public function render()
 	{
-		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->allFiles()->count() : $this->fileInitialToggle, $this->model->filesFromRelations()->pluck('id'));
+		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->allFiles()->count() : $this->fileInitialToggle
+		// , $this->model->filesFromRelations()->pluck('id')
+		);
 
 		return [
 			_CKEditorExtended('')->name('details')->class('ckNoToolbar'),

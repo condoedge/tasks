@@ -35,22 +35,12 @@ abstract class TasksMainView extends Query
             _Columns(
                 _Input('Title')->name('title')->filter(),
                 _MultiSelect('task.assigned-to')->name('assigned_to')->options(
-                    currentTeam()->nonContactUsers()->pluck('name', 'id')
-                )->filter(),
-                _MultiSelect('Unions')->name('union')->options(
-                    currentTeam()->unions()->withCount('tasks')->get()->mapWithKeys(
-                        fn($union) => [
-                            $union->id => _FlexBetween(
-                                _Html($union->display),
-                                _Badge($union->tasks_count)->class('ml-2'),
-                            )->class('text-sm')
-                        ]
-                    )
+                    currentTeam()->users()->pluck('users.name', 'users.id')
                 )->filter(),
                 _TagsMultiSelect('Tags')->filter()
             ),
             _FlexEnd(
-                _Link('task.add_task')->icon('icon-plus')->button()->get('tasks.form')->inDrawer()
+                _Link('task.add_task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,
             _Flex(

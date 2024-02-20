@@ -2,22 +2,13 @@
 
 use Kompo\Tasks\Components\General\CKEditorExtended;
 
+/* COMPONENTS */
 function _CKEditorExtended($label = '')
 {
     return CKEditorExtended::form($label)->bootMentions();
 }
 
 /* STYLED ELEMENTS */
-function _PageTitle($label)
-{
-	return _H1($label)->class('text-2xl sm:text-3xl font-bold');
-}
-
-function _MiniTitle($label)
-{
-    return _Html($label)->classMiniTitle();
-}
-
 function _CardHeader($title, $buttons = [])
 {
     return _FlexBetween(

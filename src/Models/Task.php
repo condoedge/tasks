@@ -136,7 +136,7 @@ class Task extends Model
     /* QUERIES */
     public static function baseQuery()
     {
-        return static::with('assignedTo', 'taskDetails.read', 'project', 'maintenance')
+        return static::with('assignedTo', 'taskDetails.read')
             ->withCount('taskDetails')
             // ->withCount('unreadNotifications')
             ->withReminderInfo()
@@ -195,8 +195,8 @@ class Task extends Model
     {
         return [
             'calendar-main-view',
-            'tasks-kanban',
-            'tasks-manager',
+            'tasks.kanban',
+            'tasks.manager',
             'dashboard-agenda-card',
             'calendar-union-view',
         ];
@@ -222,13 +222,7 @@ class Task extends Model
     {
         $this->taskDetails->each->delete();
         $this->taskLinks->each->delete();
-        $this->deleteNotifications();
-
-        if($this->project)
-            $this->project->delete();
-
-        if($this->maintenance)
-            $this->maintenance->delete();
+        // $this->deleteNotifications();
 
         parent::delete();
     }

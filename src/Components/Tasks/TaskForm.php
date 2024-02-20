@@ -8,8 +8,6 @@ class TaskForm extends TaskInfoForm
 
 	protected $refresh = true;
 
-	protected $cardIdToRefresh;
-
 	public $class = 'bg-white rounded-l-2xl';
 
 	public function created()
@@ -24,12 +22,10 @@ class TaskForm extends TaskInfoForm
 			'redirectBackTo' => $this->store('redirectBackTo') ?: url()->previous()
 		]);
 
-		$this->cardIdToRefresh = $this->refreshId();
-
 		$this->model->markRead();
 
-        if($this->model->notifications()->forAuthUser()->count())
-            $this->model->notifications()->forAuthUser()->get()->each->markSeen();
+        // if($this->model->notifications()->forAuthUser()->count())
+        //     $this->model->notifications()->forAuthUser()->get()->each->markSeen();
 
 		if($this->model->id)
 			$this->_kompo('options', [
@@ -70,7 +66,7 @@ class TaskForm extends TaskInfoForm
 
         	new TaskDetailsList([
         		'task_id' => $this->model->id,
-        		'task_card_id' => $this->cardIdToRefresh
+        		'task_card_id' => TasksCard::ID,
         	]) :
 
         	_Html('task.add-action-first')

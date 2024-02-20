@@ -9,7 +9,7 @@ class TasksManager extends TasksMainView
     public $itemsWrapperClass = 'overflow-y-auto mini-scroll';
     public $itemsWrapperStyle = 'height: calc(100vh - 200px)';
 
-    protected $switchToRouteName = 'tasks-kanban';
+    protected $switchToRouteName = 'tasks.kanban';
     public $viewIcon = 'view-grid';
 
 	public function right()
@@ -24,7 +24,7 @@ class TasksManager extends TasksMainView
 	public function render($task)
 	{
 		return $task->taskCard()->class('w-80 bg-white')
-			->get('tasks.form', ['id' => $task->id])
+			->get('task.form', ['id' => $task->id])
             ->inPanel('showPagePanel');
 	}
 }

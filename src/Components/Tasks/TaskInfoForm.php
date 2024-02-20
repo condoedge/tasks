@@ -20,7 +20,7 @@ abstract class TaskInfoForm extends Form
 
 	public function beforeSave()
 	{
-		$this->model->public = $this->model->visibility ?: TaskVisibilityEnum::MANAGERS;
+		$this->model->team_id = currentTeamId();
 
 		$this->model->handleStatusChange(request('status'));
 	}
@@ -48,7 +48,7 @@ abstract class TaskInfoForm extends Form
 				$this->submitsRefresh(
 					_Select()->placeholder('task.task-lead')->name('assigned_to')
 						->options(
-							currentTeam()->nonContactUsers()->pluck('name', 'id')
+							currentTeam()->users()->pluck('users.name', 'users.id')
 						)
 						->icon(_Sax('profile'))
 						->default(auth()->user()->id)
@@ -97,8 +97,8 @@ abstract class TaskInfoForm extends Form
 	protected function statusInput()
 	{
 		return _Select()->placeholder('Status')->name('status')
-			->options(Task::statuses())
-			->default((string) TaskStatusEnum::OPEN);
+			->options(TaskStatusEnum::optionsWithLabels())
+			->default(TaskStatusEnum::OPEN);
 	}
 
 	protected function visibilityAndOptions()
@@ -106,10 +106,10 @@ abstract class TaskInfoForm extends Form
 		return _Rows(
 			$this->submitsRefresh(
 				_Select()->name('Visibility')
-                ->name('public')
+                ->name('visibility')
                 ->icon(_Sax('eye'))
-                ->options(Task::visibilities())
-                ->default((string) TaskVisibilityEnum::MANAGERS)
+                ->options(TaskVisibilityEnum::optionsWithLabels())
+                ->default(TaskVisibilityEnum::MANAGERS)
 			),
 
 			$this->model->id ? $this->submitsRefresh(_Checkbox('Priority')->name('urgent')) : null,
@@ -131,7 +131,7 @@ abstract class TaskInfoForm extends Form
 	protected function taskRelatedLists()
 	{
 		return array_merge(Task::taskListsToRefresh(), [
-			$this->cardIdToRefresh,
+			TasksCard::ID,
 		]);
 	}
 

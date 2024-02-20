@@ -7,14 +7,15 @@ use Kompo\Tasks\Models\Task;
 
 class TasksCard extends Query
 {
-    protected $slug = 'tasks';
-
     public $perPage = 4;
     public $paginationType = 'Scroll';
     public $itemsWrapperClass = 'overflow-y-auto mini-scroll';
     public $itemsWrapperStyle = 'max-height: 350px';
 
     public $noItemsFound = ' ';
+
+    const ID = 'intro-tasks-card';
+	public $id = self::ID;
 
     public $class = 'intro-tasks-card dashboard-card';
 
@@ -40,7 +41,7 @@ class TasksCard extends Query
             'Tasks';
 
         return _CardHeader($title, !auth()->user()->can('create', Task::class) ? null : [
-            _Link()->icon(_Sax('clipboard-tick',20))->href('tasks-kanban')
+            _Link()->icon(_Sax('clipboard-tick',20))->href('tasks.kanban')
                 ->class('mr-2 text-xl')->balloon('task.see_all_tasks','up'),
             _IconFilter('urgent', 'info-circle', 'task.filter_urgent')
                 ->class('mr-2'),

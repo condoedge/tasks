@@ -3,9 +3,9 @@
 namespace Kompo\Tasks\Models;
 
 use Kompo\Auth\Models\Files\File;
+use Kompo\Auth\Models\Files\MorphManyFilesTrait;
 use Kompo\Auth\Models\Model;
 use Kompo\Auth\Models\Traits\BelongsToUserTrait;
-use Kompo\Auth\Models\Traits\MorphManyFilesTrait;
 
 class TaskDetail extends Model
 {
@@ -90,12 +90,13 @@ class TaskDetail extends Model
 
     public function addLinkedFiles($linkedFileIds = [])
     {
-        collect($linkedFileIds)->each(function($fileId){
-            $file = File::find($fileId);
-            if (!$this->filesFromRelations()->pluck('id')->contains($file->id)) {
-                $file->linkToOrAssociate($this->id, 'task-detail');
-            }
-        });
+        // TODO
+        // collect($linkedFileIds)->each(function($fileId){
+        //     $file = File::find($fileId);
+        //     if (!$this->filesFromRelations()->pluck('id')->contains($file->id)) {
+        //         $file->linkToOrAssociate($this->id, 'task-detail');
+        //     }
+        // });
 
         $this->load('files');
     }
@@ -143,13 +144,11 @@ class TaskDetail extends Model
         );
     }
 
-    public function calendarMiddleBox($withUnion = false)
+    public function calendarMiddleBox()
     {
         return _Rows(
             _Html($this->task->title)->class('text-sm'),
             _Html($this->task->status_label)->class('text-xs text-gray-300'),
-            (($union = $this->task->union) && $withUnion)?
-                _UnionUnitBadge($union->display)->class('mt-2') : null
         );
     }
 

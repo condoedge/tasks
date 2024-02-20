@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace Kompo\Tasks\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -53,7 +53,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return ($task->team_id == $user->current_team_id) || $user->hasPermission('task:update');
+        return ($task->team_id == $user->current_team_id);
     }
 
     /**
@@ -65,7 +65,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return ($task->user_id == $user->id) || $user->hasPermission('task:delete');
+        return ($task->user_id == $user->id);
     }
 
     /**
