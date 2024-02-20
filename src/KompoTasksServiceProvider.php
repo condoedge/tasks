@@ -4,7 +4,7 @@ namespace Kompo\Tasks;
 
 use Illuminate\Support\ServiceProvider;
 
-class KompoTaskserviceProvider extends ServiceProvider
+class KompoTasksServiceProvider extends ServiceProvider
 {
     use \Kompo\Routing\Mixins\ExtendsRoutingTrait;
 
