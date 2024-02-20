@@ -1,6 +1,6 @@
 <?php
 
-namespace Kompo\Tasks\Tasks;
+namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
 use Kompo\Tasks\Models\Contracts\Taskable;

@@ -1,7 +1,6 @@
 <?php
 
-namespace Kompo\Tasks\Tasks;
-
+namespace Kompo\Tasks\Components\Tasks;
 
 class TaskForm extends TaskInfoForm
 {

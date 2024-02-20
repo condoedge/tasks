@@ -1,6 +1,6 @@
 <?php
 
-namespace Kompo\Tasks\Tasks;
+namespace Kompo\Tasks\Components\Tasks;
 
 use Illuminate\Support\Carbon;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;

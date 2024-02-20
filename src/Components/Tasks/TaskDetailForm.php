@@ -1,6 +1,6 @@
 <?php
 
-namespace Kompo\Tasks\Tasks;
+namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Auth\Models\Files\File;
 use Kompo\Form;
