@@ -91,7 +91,7 @@ abstract class TaskInfoForm extends Form
 
 	protected function titleInput()
 	{
-		return _Input()->placeholder('Title')->name('title');
+		return _Translatable()->placeholder('Title')->name('title');
 	}
 
 	protected function statusInput()

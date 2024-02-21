@@ -10,15 +10,20 @@ use Kompo\Auth\Models\Teams\BelongsToTeamTrait;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
 use Kompo\Auth\Models\Tags\MorphToManyTagsTrait;
+use Kompo\Database\HasTranslations;
 
 class Task extends Model
 {
-    use BelongsToTeamTrait, MorphToManyTagsTrait;
+    use BelongsToTeamTrait, MorphToManyTagsTrait, HasTranslations;
 
     protected $casts = [
         'status' => TaskStatusEnum::class,
         'visibility' => TaskVisibilityEnum::class,
         'closed_at' => 'datetime',
+    ];
+
+    protected $translatable = [
+        'title',
     ];
 
     
@@ -124,7 +129,7 @@ class Task extends Model
             return $query->where('visibility', TaskVisibilityEnum::ALL);
         // }
 
-        return $query;
+        // return $query;
     }
 
     public function scopeWithReminderInfo($query)

@@ -18,19 +18,18 @@ class TasksKanban extends TasksMainView
     public $id = 'tasks.kanban';
 
 	
-
     public function created()
     {
-    	// $this->columns = TaskStatusEnum::optionsWithLabels()->values()->toArray();
-    	// $this->columnStyle = 'min-width: 15rem; width: calc(25vw - 50px)';
-    	// $this->emptyColumn = _Html('task.drag_card')
-    	// 						->class('border-2 border-dashed border-gray-400 text-gray-600 text-center rounded-2xl py-6 mt-2');
+    	$this->columns = TaskStatusEnum::optionsWithLabels()->values()->toArray();
+    	$this->columnStyle = 'min-width: 15rem; width: calc(25vw - 50px)';
+    	$this->emptyColumn = _Html('task.drag_card')
+    							->class('border-2 border-dashed border-gray-400 text-gray-600 text-center rounded-2xl py-6 mt-2');
 
-    	// $this->confirmBefore = [
-	    // 	'status' => TaskStatusEnum::CLOSED,
-	    // 	'attribute' => 'incomplete_task_details_min_reminder_at',
-	    // 	'message' => __('task.incomplete-task-reminders'),
-	    // ];
+    	$this->confirmBefore = [
+	    	'status' => TaskStatusEnum::CLOSED,
+	    	'attribute' => 'incomplete_task_details_min_reminder_at',
+	    	'message' => __('task.incomplete-task-reminders'),
+	    ];
     }
 
 	public function query()
