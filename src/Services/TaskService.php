@@ -9,11 +9,14 @@ use Kompo\Tasks\Components\Tasks\TasksManager;
 
 class TaskService 
 {
-    public static function setRoutes()
+    public static function setGeneralRoutes()
     {
         Route::get('tasks-manager', TasksManager::class)->name('tasks.manager');
         Route::get('tasks-kanban/{mine_urgent?}', TasksKanban::class)->name('tasks.kanban');
+    }
 
+    public static function setDrawerRoutes()
+    {
         Route::get('/task/{id?}', TaskForm::class)->name('task.form');
     }
 }
