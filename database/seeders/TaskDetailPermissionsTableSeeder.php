@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Kompo\TasksSeeders;
 
 use Illuminate\Database\Seeder;
 
