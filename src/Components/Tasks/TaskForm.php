@@ -22,7 +22,7 @@ class TaskForm extends TaskInfoForm
 			'redirectBackTo' => $this->store('redirectBackTo') ?: url()->previous()
 		]);
 
-		$this->model->markRead();
+		$this->model->markAsRead();
 
         // if($this->model->notifications()->forAuthUser()->count())
         //     $this->model->notifications()->forAuthUser()->get()->each->markSeen();

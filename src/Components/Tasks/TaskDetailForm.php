@@ -48,12 +48,12 @@ class TaskDetailForm extends Form
 
 		$this->processTaskDetails();
 
-		$this->model->markRead();
+		$this->model->markAsRead();
 	}
 
 	public function render()
 	{
-		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->allFiles()->count() : $this->fileInitialToggle
+		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle
 		// , $this->model->filesFromRelations()->pluck('id')
 		);
 

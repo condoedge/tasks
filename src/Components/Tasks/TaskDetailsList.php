@@ -23,7 +23,7 @@ class TaskDetailsList extends Query
 
     public function query()
     {
-        return TaskDetail::with('user', 'files', 'relatedFiles.parent2')
+        return TaskDetail::with('user', 'files')
             ->where('task_id', $this->taskId)->orderBy('created_at', 'DESC');
     }
 
@@ -45,7 +45,7 @@ class TaskDetailsList extends Query
 
     public function render($td)
     {
-        $allFiles = $td->allFiles();
+        $allFiles = $td->files;
 
     	return _Rows(
             _FlexBetween(
@@ -70,9 +70,12 @@ class TaskDetailsList extends Query
 
                 _Flex(
                     $allFiles->map(function($file){
-                        return $file->fileThumbnail();
+                        return _Link($file->name)->class('mt-1 -mr-2')->col('col-md-3')
+                            ->icon('arrow-down')
+                            ->href($file->link)
+                            ->attr(['download' => $file->name]);
                     })
-                )->class('mt-2'),
+                )->class('mt-4 gap-4'),
 
             !$td->reminder_at ? null :
 
