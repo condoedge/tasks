@@ -1,6 +1,6 @@
 <?php
 
-namespace Kompo\TasksSeeders;
+namespace Kompo\TasksSeeders\Traits;
 
 use Kompo\Auth\Models\Teams\Permission;
 

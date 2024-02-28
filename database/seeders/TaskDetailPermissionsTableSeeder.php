@@ -3,6 +3,7 @@
 namespace Kompo\TasksSeeders;
 
 use Illuminate\Database\Seeder;
+use Kompo\TasksSeeders\Traits\PermissionTrait;
 
 class TaskDetailPermissionsTableSeeder extends Seeder
 {
