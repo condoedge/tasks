@@ -4,6 +4,10 @@ namespace Kompo\Tasks;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Models\TaskDetail;
+use Kompo\Tasks\Policies\TaskDetailPolicy;
+use Kompo\Tasks\Policies\TaskPolicy;
 
 class KompoTasksServiceProvider extends ServiceProvider
 {
@@ -17,6 +21,8 @@ class KompoTasksServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadHelpers();
+
+        $this->registerPolicies();
 
         $this->extendRouting();
 
@@ -44,6 +50,18 @@ class KompoTasksServiceProvider extends ServiceProvider
         Relation::morphMap([
             'user' => \App\Models\User::class,
         ]);
+    }
+
+    protected function registerPolicies()
+    {
+        $policies = [
+            TaskDetail::class => TaskDetailPolicy::class,
+            Task::class => TaskPolicy::class,
+        ];
+
+        foreach ($policies as $key => $value) {
+            \Gate::policy($key, $value);
+        }
     }
 
     protected function loadHelpers()
