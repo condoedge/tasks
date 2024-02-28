@@ -109,7 +109,7 @@ abstract class TaskInfoForm extends Form
                 ->name('visibility')
                 ->icon(_Sax('eye'))
                 ->options(TaskVisibilityEnum::optionsWithLabels())
-                ->default(TaskVisibilityEnum::MANAGERS)
+                ->default(TaskVisibilityEnum::ALL)
 			),
 
 			$this->model->id ? $this->submitsRefresh(_Checkbox('Priority')->name('urgent')) : null,
