@@ -20,6 +20,7 @@ class Task extends Model
         'status' => TaskStatusEnum::class,
         'visibility' => TaskVisibilityEnum::class,
         'closed_at' => 'datetime',
+        'incomplete_task_details_min_reminder_at' => 'datetime',
     ];
 
     protected $translatable = [
@@ -153,7 +154,7 @@ class Task extends Model
     public function taskCard()
     {
         $minReminderDate = $this->incomplete_task_details_min_reminder_at;
-
+        
         $taskRead = $this->task_details_count === $this->taskDetails->filter(fn($td) => $td->read)->count();
 
         $taskNotified = $this->unread_notifications_count ?: null;
@@ -208,10 +209,10 @@ class Task extends Model
     }
 
     /* ACTIONS */
-    public function markRead()
+    public function markAsRead()
     {
         \DB::transaction(function(){
-            $this->taskDetails()->with('read')->get()->each(fn($td) => $td->markRead());
+            $this->taskDetails()->with('read')->get()->each(fn($td) => $td->markAsRead());
         });
     }
 

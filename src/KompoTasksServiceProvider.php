@@ -2,6 +2,7 @@
 
 namespace Kompo\Tasks;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class KompoTasksServiceProvider extends ServiceProvider
@@ -39,6 +40,10 @@ class KompoTasksServiceProvider extends ServiceProvider
     public function register()
     {
         $this->loadRoutes();
+
+        Relation::morphMap([
+            'user' => \App\Models\User::class,
+        ]);
     }
 
     protected function loadHelpers()

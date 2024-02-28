@@ -1,0 +1,30 @@
+.mention-triggers{
+	@apply text-2xl text-gray-500 items-center;
+	i{
+		@apply mr-4 text-gray-500;
+	}
+	.icon-profile{
+		@apply mr-2; //because the icon is thinner than others
+	}
+	svg{
+		@apply mr-3 text-3xl;
+	}
+}
+
+.datetime-mention{
+	.vlInputPrepend{
+		width: auto;
+		padding: 0;
+	}
+	.vlInputWrapper{
+		border: 0;
+	}
+	.vlFormControl{
+		padding: 0;
+		width: 1px;
+		opacity: 0;
+	}
+	.vlInputAppend{
+		display: none;
+	}
+}
