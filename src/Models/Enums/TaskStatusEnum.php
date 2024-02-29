@@ -6,10 +6,10 @@ enum TaskStatusEnum: int
 {
     use \Kompo\Auth\Models\Traits\EnumKompo;
 
-	case OPEN = 1;
-	case PENDING = 2;
-    case PROCESSING = 3;
-    case CLOSED = 4;
+	case OPEN = 0;
+	case PENDING = 1;
+    case PROCESSING = 2;
+    case CLOSED = 3;
 
 	public function label()
     {

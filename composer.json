@@ -4,7 +4,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Kompo\\Tasks\\": "src/"
+            "Kompo\\Tasks\\": "src/",
+            "Kompo\\TasksSeeders\\": "database/seeders/"
         }
     },
     "minimum-stability": "stable",

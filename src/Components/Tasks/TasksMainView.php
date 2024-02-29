@@ -39,7 +39,7 @@ abstract class TasksMainView extends Query
                 )->filter(),
                 _TagsMultiSelect('Tags')->filter()
             ),
-            _FlexEnd(
+            !auth()->user()->can('create', Task::class) ? null : _FlexEnd(
                 _Link('task.add_task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,

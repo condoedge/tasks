@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        //
+        return $task->team_id == $user->id;
     }
 
     /**
@@ -41,7 +41,7 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('tasks:create');
     }
 
     /**
@@ -53,7 +53,9 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return ($task->team_id == $user->current_team_id);
+        return ($task->created_by == $user->id) || 
+            ($user->hasPermission('tasks:updateOfTeam') && $task->team_id == $user->current_team_id) || 
+            $user->hasPermission('tasks:update');
     }
 
     /**
@@ -65,30 +67,16 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return ($task->user_id == $user->id);
+        return ($task->created_by == $user->id) || 
+            ($user->hasPermission('tasks:deleteOfTeam') && $task->team_id == $user->current_team_id) || 
+            $user->hasPermission('tasks:delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Kompo\Tasks\Models\Task  $task
-     * @return mixed
-     */
-    public function restore(User $user, Task $task)
+    public function close(User $user, Task $task)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \Kompo\Tasks\Models\Task  $task
-     * @return mixed
-     */
-    public function forceDelete(User $user, Task $task)
-    {
-        //
+        return $task->created_by == $user->id || 
+            ($task->assigned_to == $user->id && $user->can('tasks:closeAssigned')) || 
+            ($user->hasPermission('tasks:closeOfTeam') && $task->team_id == $user->current_team_id) || 
+            $user->hasPermission('tasks:close');
     }
 }
