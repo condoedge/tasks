@@ -14,7 +14,7 @@ abstract class TasksMainView extends Query
 
 	public function query()
 	{
-        $query= Task::baseQuery()->where('team_id', currentTeam()->id);
+        $query= Task::baseQuery()->forTeam();
 
         if (request('only_mine') || request('mine_urgent')) {
             $query = $query->where('assigned_to', auth()->id());

@@ -3,6 +3,7 @@
 namespace Kompo\Tasks\Models;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kompo\Auth\Models\Model;
@@ -117,6 +118,15 @@ class Task extends Model
     public function scopeClosed($query)
     {
         return $query->where('status', TaskStatusEnum::CLOSED);
+    }
+
+    public function scopeWithClosedLogic($query, $closedSinceDays = 2)
+    {
+        return $query->where(fn($q) => $q->notClosed()
+            ->orWhere(fn($q) => $q->closed()
+                    ->where('closed_at', '>=', Carbon::now()->addDays(-(request('closed_since') ?: $closedSinceDays)))
+            )
+        );
     }
 
     public function scopeUserVisibility($query)

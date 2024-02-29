@@ -34,17 +34,7 @@ class TasksKanban extends TasksMainView
 
 	public function query()
 	{
-        return parent::query()->where(function($q){
-
-            $q->notClosed()->orWhere(function($q){
-
-				$closedSinceDays = request('closed_since') ?: 2;
-
-                $q->closed()->where('closed_at', '>=', Carbon::now()->addDays(-$closedSinceDays));
-
-            });
-
-        });
+        return parent::query()->withClosedLogic();
 	}
 
 	public function render($task)
