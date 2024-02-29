@@ -49,6 +49,8 @@ class KompoTasksServiceProvider extends ServiceProvider
 
         Relation::morphMap([
             'user' => \App\Models\User::class,
+            'taskDetail' => TaskDetail::class,
+            'task' => Task::class,
         ]);
     }
 
