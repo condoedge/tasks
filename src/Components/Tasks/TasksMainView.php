@@ -4,6 +4,7 @@ namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
 use Kompo\Tasks\Models\Task;
+use App\Models\User;
 
 abstract class TasksMainView extends Query
 {
@@ -35,7 +36,8 @@ abstract class TasksMainView extends Query
             _Columns(
                 _Input('Title')->name('title')->filter(),
                 _MultiSelect('task.assigned-to')->name('assigned_to')->options(
-                    currentTeam()->users()->pluck('users.name', 'users.id')
+                    currentTeam()->assignToOptions(),
+                        // ->pluck('users.name', 'users.id')
                 )->filter(),
                 _TagsMultiSelect('Tags')->filter()
             ),

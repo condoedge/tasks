@@ -48,7 +48,7 @@ abstract class TaskInfoForm extends Form
 				$this->submitsRefresh(
 					_Select()->placeholder('task.task-lead')->name('assigned_to')
 						->options(
-							currentTeam()->users()->pluck('users.name', 'users.id')
+							currentTeam()->assignToOptions(),
 						)
 						->icon(_Sax('profile'))
 						->default(auth()->user()->id)
