@@ -63,7 +63,7 @@ class TaskDetailForm extends Form
 	        !auth()->user()->can('create', TaskDetail::class) ? null : _FlexEnd2(
                 _Flex2 (
 					$attachmentsLink,
-					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', Task::class)) ? null :
+					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :
 
 						_SubmitButton('task.add-and-close-task')->class('mr-2 mb-2 md:mb-0 w-full md:w-auto')->outlined()
 							->onSuccess(function($e){
