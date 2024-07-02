@@ -26,7 +26,7 @@ class KompoTasksServiceProvider extends ServiceProvider
 
         $this->extendRouting();
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kompo-tasks');
+        $this->loadJSONTranslationsFrom(__DIR__.'/../resources/lang');
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
