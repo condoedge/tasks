@@ -32,17 +32,17 @@ abstract class TasksMainView extends Query
 
 	public function top()
 	{
-		return $this->topFilterHeader('Tasks',
+		return $this->topFilterHeader('tasks-tasks',
             _Columns(
-                _Input('Title')->name('title')->filter(),
-                _MultiSelect('task.assigned-to')->name('assigned_to')->options(
+                _Input('tasks-title')->name('title')->filter(),
+                _MultiSelect('tasks-assigned-to')->name('assigned_to')->options(
                     currentTeam()->assignToOptions(),
                         // ->pluck('users.name', 'users.id')
                 )->filter(),
-                _TagsMultiSelect('Tags')->filter()
+                _TagsMultiSelect('tasks-tags')->filter()
             ),
             !auth()->user()->can('create', Task::class) ? null : _FlexEnd(
-                _Link('task.add_task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
+                _Link('task-add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,
             _Flex(
