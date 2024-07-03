@@ -15,10 +15,10 @@ enum TaskStatusEnum: int
     {
         return match ($this)
         {
-            static::OPEN => __('translate.tasks.statuses.open'),
-            static::PENDING => __('translate.tasks.statuses.pending'),
-            static::PROCESSING => __('translate.tasks.statuses.processing'),
-            static::CLOSED => __('translate.tasks.statuses.done')
+            static::OPEN => __('tasks.statuses.open'),
+            static::PENDING => __('tasks.statuses.pending'),
+            static::PROCESSING => __('tasks.statuses.processing'),
+            static::CLOSED => __('tasks.statuses.done')
         };
     }
 }

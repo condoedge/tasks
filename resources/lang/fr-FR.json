@@ -1,0 +1,12 @@
+{
+	"tasks.add-task": "Ajouter une tâche",
+	"tasks.filter": "Filtrer",
+	"tasks.statuses.done": "Terminée",
+	"tasks.statuses.open": "Ouverte",
+	"tasks.statuses.pending": "En attente",
+	"tasks.statuses.processing": "En cours",
+	"tasks.tasks": "Tâches",
+	"tasks.visibilities.all": "Tous",
+	"tasks.visibilities.board": "Membres adultes",
+	"tasks.visibilities.managers": "Gestionnaires"
+}

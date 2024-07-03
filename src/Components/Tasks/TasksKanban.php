@@ -22,13 +22,13 @@ class TasksKanban extends TasksMainView
     {
     	$this->columns = TaskStatusEnum::optionsWithLabels()->values()->toArray();
     	$this->columnStyle = 'min-width: 15rem; width: calc(25vw - 50px)';
-    	$this->emptyColumn = _Html('task.drag_card')
+    	$this->emptyColumn = _Html('tasks.drag_card')
     							->class('border-2 border-dashed border-gray-400 text-gray-600 text-center rounded-2xl py-6 mt-2');
 
     	$this->confirmBefore = [
 	    	'status' => TaskStatusEnum::CLOSED,
 	    	'attribute' => 'incomplete_task_details_min_reminder_at',
-	    	'message' => __('task.incomplete-task-reminders'),
+	    	'message' => __('tasks.incomplete-task-reminders'),
 	    ];
     }
 

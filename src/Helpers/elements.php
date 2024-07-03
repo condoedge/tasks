@@ -37,7 +37,7 @@ function _IconFilter($name, $icon, $label, $operator = null)
 
 function _FilterToggler($id, $withLabel = true)
 {
-	return _Button($withLabel ? ('<span class="hidden sm:inline">'.__('tasks-filter').'</span>') : '')
+	return _Button($withLabel ? ('<span class="hidden sm:inline">'.__('tasks.filter').'</span>') : '')
         ->icon(
             _Sax('filter',22)->class('text-xl')
         )

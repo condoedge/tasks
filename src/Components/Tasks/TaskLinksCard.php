@@ -49,6 +49,6 @@ class TaskLinksCard extends Query
 
     public function noItemsFound()
     {
-        return _Html('task.no_participants')->class('text-gray-600 text-sm');
+        return _Html('tasks.no_participants')->class('text-gray-600 text-sm');
     }
 }

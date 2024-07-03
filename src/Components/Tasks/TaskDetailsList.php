@@ -55,7 +55,7 @@ class TaskDetailsList extends Query
 
 
             _FlexBetween(
-                _Html($td->user?->name.' '.__('task.modified-action'))->class('text-xs text-gray-500 mb-2'),
+                _Html($td->user?->name.' '.__('tasks.modified-action'))->class('text-xs text-gray-500 mb-2'),
                 _FlexEnd(
                     auth()->user()->can('update', $td) ?
                         _Link()->icon(_Sax('edit',20))->class('mr-2')->selfUpdate('getTaskDetailForm', ['id' => $td->id])->inModal() :
@@ -82,11 +82,11 @@ class TaskDetailsList extends Query
                 _FlexEnd(
                     $td->completed_at ?
 
-                        $this->completedButton('task.completed', 'resetTaskDetail', $td) :
+                        $this->completedButton('tasks.completed', 'resetTaskDetail', $td) :
 
                         (
                             // auth()->user()->isContact() ? null :
-                            $this->completedButton('task.marked_complete', 'completeTaskDetail', $td)
+                            $this->completedButton('tasks.marked_complete', 'completeTaskDetail', $td)
                         )
                 ),
         )->class('text-sm p-6 m-2 rounded-2xl bg-gray-100');
@@ -120,7 +120,7 @@ class TaskDetailsList extends Query
 
     public function noItemsFound()
     {
-        return _Html('task.text-here-will-be-the-note-details')
+        return _Html('tasks.text-here-will-be-the-note-details')
             ->class('my-4 px-6 mx-auto text-gray-600 text-center text-xs');
     }
 

@@ -1,0 +1,12 @@
+{
+	"tasks.add-task": "Add task",
+	"tasks.filter": "Filter",
+	"tasks.statuses.done": "Done",
+	"tasks.statuses.open": "Open",
+	"tasks.statuses.pending": "Pending",
+	"tasks.statuses.processing": "Processing",
+	"tasks.tasks": "Tasks",
+	"tasks.visibilities.all": "All",
+	"tasks.visibilities.board": "Vonlunteers",
+	"tasks.visibilities.managers": "Managers"
+}

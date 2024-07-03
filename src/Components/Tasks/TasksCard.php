@@ -42,8 +42,8 @@ class TasksCard extends Query
 
         return _CardHeader($title, !auth()->user()->can('create', Task::class) ? null : [
             _Link()->icon(_Sax('clipboard-tick',20))->href('tasks.kanban')
-                ->class('mr-2 text-xl')->balloon('task.see_all_tasks','up'),
-            _IconFilter('urgent', 'info-circle', 'task.filter_urgent')
+                ->class('mr-2 text-xl')->balloon('tasks.see_all_tasks','up'),
+            _IconFilter('urgent', 'info-circle', 'tasks.filter_urgent')
                 ->class('mr-2'),
             _Link()->icon(_Sax('add'))->balloon('Add')
                 ->get($this->editRoute, $this->routeParameters())

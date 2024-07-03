@@ -30,7 +30,7 @@ abstract class TaskInfoForm extends Form
 		return _Rows(
 	        _Rows(
 	        	_FlexBetween(
-	        		_MiniTitle('task.task'),
+	        		_MiniTitle('tasks.task'),
 	        		$this->taskDeleteLink()
 				)->class('mt-4'),
 
@@ -46,7 +46,7 @@ abstract class TaskInfoForm extends Form
 	        _Rows(
 				_MiniTitle('assigned_to')->class('mt-4'),
 				$this->submitsRefresh(
-					_Select()->placeholder('task.task-lead')->name('assigned_to')
+					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
 							currentTeam()->assignToOptions(),
 						)

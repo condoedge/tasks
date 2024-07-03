@@ -65,7 +65,7 @@ class TaskDetailForm extends Form
 					$attachmentsLink,
 					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :
 
-						_SubmitButton('task.add-and-close-task')->class('mr-2 mb-2 md:mb-0 w-full md:w-auto')->outlined()
+						_SubmitButton('tasks.add-and-close-task')->class('mr-2 mb-2 md:mb-0 w-full md:w-auto')->outlined()
 							->onSuccess(function($e){
 								$e->selfPost('closeTask')
 									->refresh('task-adding-view')

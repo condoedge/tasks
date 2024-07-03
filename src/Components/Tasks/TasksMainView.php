@@ -32,7 +32,7 @@ abstract class TasksMainView extends Query
 
 	public function top()
 	{
-		return $this->topFilterHeader('tasks-tasks',
+		return $this->topFilterHeader('tasks.tasks',
             _Columns(
                 _Input('tasks-title')->name('title')->filter(),
                 _MultiSelect('tasks-assigned-to')->name('assigned_to')->options(
@@ -42,15 +42,15 @@ abstract class TasksMainView extends Query
                 _TagsMultiSelect('tasks-tags')->filter()
             ),
             !auth()->user()->can('create', Task::class) ? null : _FlexEnd(
-                _Link('task.add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
+                _Link('tasks.add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,
             _Flex(
-                $this->selectLinkFilter(auth()->user()->id, 'profile-circle', 'task.show-my-tasks-only')
+                $this->selectLinkFilter(auth()->user()->id, 'profile-circle', 'tasks.show-my-tasks-only')
                     ->name('only_mine', false)->default($this->defaultAssignedTo),
                 $this->selectLinkFilter(1, 'info-circle', 'Priority')
                     ->name('urgent', false)->default($this->defaultUrgency),
-                $this->selectLinkFilter(365, 'tick-circle', 'task.with-closed-tasks')
+                $this->selectLinkFilter(365, 'tick-circle', 'tasks.with-closed-tasks')
                     ->name('closed_since', false),
             )
         )->class('flex-wrap');
