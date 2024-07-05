@@ -44,7 +44,7 @@ abstract class TaskInfoForm extends Form
 			)->class('card-gray-100 px-6 mx-4 !space-y-2 pb-5'),
 
 	        _Rows(
-				_MiniTitle('assigned_to')->class('mt-4'),
+				_MiniTitle('tasks.assigned-to')->class('mt-4'),
 				$this->submitsRefresh(
 					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
@@ -91,12 +91,12 @@ abstract class TaskInfoForm extends Form
 
 	protected function titleInput()
 	{
-		return _Translatable()->placeholder('Title')->name('title');
+		return _Translatable()->placeholder('tasks.title')->name('title');
 	}
 
 	protected function statusInput()
 	{
-		return _Select()->placeholder('Status')->name('status')
+		return _Select()->placeholder('tasks.status')->name('status')
 			->options(TaskStatusEnum::optionsWithLabels())
 			->default(TaskStatusEnum::OPEN);
 	}
@@ -105,14 +105,14 @@ abstract class TaskInfoForm extends Form
 	{
 		return _Rows(
 			$this->submitsRefresh(
-				_Select()->name('Visibility')
+				_Select()
                 ->name('visibility')
                 ->icon(_Sax('eye'))
                 ->options(TaskVisibilityEnum::optionsWithLabels())
                 ->default(TaskVisibilityEnum::ALL)
 			),
 
-			$this->model->id ? $this->submitsRefresh(_Checkbox('Priority')->name('urgent')) : null,
+			$this->model->id ? $this->submitsRefresh(_Checkbox('tasks.priority')->name('urgent')) : null,
 		);
 	}
 

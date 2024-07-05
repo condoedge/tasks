@@ -39,7 +39,7 @@ abstract class TasksMainView extends Query
                     currentTeam()->assignToOptions(),
                         // ->pluck('users.name', 'users.id')
                 )->filter(),
-                _TagsMultiSelect('tasks-tags')->filter()
+                _TagsMultiSelect('tasks.tags')->filter()
             ),
             !auth()->user()->can('create', Task::class) ? null : _FlexEnd(
                 _Link('tasks.add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()

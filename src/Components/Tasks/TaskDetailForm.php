@@ -14,7 +14,7 @@ class TaskDetailForm extends Form
 	public $model = TaskDetail::class;
 
 	public $style = 'min-width:300px';
-    public $class = 'bg-gray-300 rounded-2xl mx-2 px-6 py-4';
+    public $class = 'bg-level4 rounded-2xl mx-2 px-6 py-4';
 
 	protected $taskId;
 	protected $task;
@@ -77,7 +77,7 @@ class TaskDetailForm extends Form
 							})
 						)->class('w-full md:w-auto'),
 
-					_SubmitButton('Add')->class('mr-2 w-full md:w-auto')
+					_SubmitButton('tasks.add')->class('mr-2 w-full md:w-auto')
 						->browse(
 							array_merge(Task::taskListsToRefresh(), [
 								'task-participants-list-'.$this->taskId,
