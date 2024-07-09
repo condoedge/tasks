@@ -140,7 +140,7 @@ abstract class TaskInfoForm extends Form
 		if(!auth()->user()->can('delete', $this->model))
 			return;
 
-		return _DeleteLink()->byKey($this->model)->class('text-gray-500')
+		return _Delete($this->model)->class('text-gray-500')
 			->closeSlidingPanel()
 			->browse($this->taskRelatedLists());
 	}

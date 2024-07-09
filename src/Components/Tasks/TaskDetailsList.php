@@ -60,7 +60,7 @@ class TaskDetailsList extends Query
                     auth()->user()->can('update', $td) ?
                         _Link()->icon(_Sax('edit',20))->class('mr-2')->selfUpdate('getTaskDetailForm', ['id' => $td->id])->inModal() :
                         null,
-                    auth()->user()->can('delete', $td) ? _DeleteLink()->byKey($td) : null
+                    auth()->user()->can('delete', $td) ? _Delete($td) : null
                 )
             )->class('text-level1'),
 
