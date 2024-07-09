@@ -1,5 +1,6 @@
 {
 	"tasks.add": "Ajouter",
+	"tasks.add-action-first": "Sauvegardez la tâche pour accéder à son détail",
 	"tasks.add-and-close-task": "Ajouter et fermer la tâche",
 	"tasks.add-task": "Ajouter une tâche",
 	"tasks.assigned-to": "Assignée à",
@@ -7,8 +8,10 @@
 	"tasks.incorrect-link": "Lien incorrect",
 	"tasks.modified-action": "a modifié la tâche",
 	"tasks.no-participants": "Aucun participant",
+	"tasks.no_participants": "Aucun participant",
 	"tasks.participants": "Patricipants",
 	"tasks.priority": "Importante",
+	"tasks.show-my-tasks-only": "Mes tâches uniquement",
 	"tasks.status": "Statut",
 	"tasks.statuses.done": "Terminée",
 	"tasks.statuses.open": "Ouverte",
@@ -18,8 +21,10 @@
 	"tasks.task": "Tâche",
 	"tasks.task-lead": "Tâche confiée à...",
 	"tasks.tasks": "Tâches",
+	"tasks.text-here-will-be-the-note-details": "Les détails de la tâche apparaîtront ici",
 	"tasks.title": "Titre",
 	"tasks.visibilities.all": "Tous",
 	"tasks.visibilities.board": "Membres adultes",
-	"tasks.visibilities.managers": "Gestionnaires"
+	"tasks.visibilities.managers": "Gestionnaires",
+	"tasks.with-closed-tasks": "Afficher les tâches terminées"
 }

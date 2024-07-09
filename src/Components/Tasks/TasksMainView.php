@@ -34,8 +34,8 @@ abstract class TasksMainView extends Query
 	{
 		return $this->topFilterHeader('tasks.tasks',
             _Columns(
-                _Input('tasks-title')->name('title')->filter(),
-                _MultiSelect('tasks-assigned-to')->name('assigned_to')->options(
+                _Input('tasks.title')->name('title')->filter(),
+                _MultiSelect('tasks.assigned-to')->name('assigned_to')->options(
                     currentTeam()->assignToOptions(),
                         // ->pluck('users.name', 'users.id')
                 )->filter(),
@@ -48,7 +48,7 @@ abstract class TasksMainView extends Query
             _Flex(
                 $this->selectLinkFilter(auth()->user()->id, 'profile-circle', 'tasks.show-my-tasks-only')
                     ->name('only_mine', false)->default($this->defaultAssignedTo),
-                $this->selectLinkFilter(1, 'info-circle', 'Priority')
+                $this->selectLinkFilter(1, 'info-circle', 'tasks.priority')
                     ->name('urgent', false)->default($this->defaultUrgency),
                 $this->selectLinkFilter(365, 'tick-circle', 'tasks.with-closed-tasks')
                     ->name('closed_since', false),

@@ -38,6 +38,21 @@
 								</translations>
 							</concept_node>
 							<concept_node>
+								<name>add-action-first</name>
+								<description/>
+								<comment/>
+								<translations>
+									<translation>
+										<language>en-US</language>
+										<approved>false</approved>
+									</translation>
+									<translation>
+										<language>fr-FR</language>
+										<approved>false</approved>
+									</translation>
+								</translations>
+							</concept_node>
+							<concept_node>
 								<name>add-and-close-task</name>
 								<description/>
 								<comment/>
@@ -143,6 +158,21 @@
 								</translations>
 							</concept_node>
 							<concept_node>
+								<name>no_participants</name>
+								<description/>
+								<comment/>
+								<translations>
+									<translation>
+										<language>en-US</language>
+										<approved>false</approved>
+									</translation>
+									<translation>
+										<language>fr-FR</language>
+										<approved>false</approved>
+									</translation>
+								</translations>
+							</concept_node>
+							<concept_node>
 								<name>participants</name>
 								<description/>
 								<comment/>
@@ -159,6 +189,21 @@
 							</concept_node>
 							<concept_node>
 								<name>priority</name>
+								<description/>
+								<comment/>
+								<translations>
+									<translation>
+										<language>en-US</language>
+										<approved>false</approved>
+									</translation>
+									<translation>
+										<language>fr-FR</language>
+										<approved>false</approved>
+									</translation>
+								</translations>
+							</concept_node>
+							<concept_node>
+								<name>show-my-tasks-only</name>
 								<description/>
 								<comment/>
 								<translations>
@@ -313,6 +358,21 @@
 								</translations>
 							</concept_node>
 							<concept_node>
+								<name>text-here-will-be-the-note-details</name>
+								<description/>
+								<comment/>
+								<translations>
+									<translation>
+										<language>en-US</language>
+										<approved>false</approved>
+									</translation>
+									<translation>
+										<language>fr-FR</language>
+										<approved>false</approved>
+									</translation>
+								</translations>
+							</concept_node>
+							<concept_node>
 								<name>title</name>
 								<description/>
 								<comment/>
@@ -377,6 +437,21 @@
 									</concept_node>
 								</children>
 							</folder_node>
+							<concept_node>
+								<name>with-closed-tasks</name>
+								<description/>
+								<comment/>
+								<translations>
+									<translation>
+										<language>en-US</language>
+										<approved>false</approved>
+									</translation>
+									<translation>
+										<language>fr-FR</language>
+										<approved>false</approved>
+									</translation>
+								</translations>
+							</concept_node>
 						</children>
 					</folder_node>
 				</children>

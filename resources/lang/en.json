@@ -1,5 +1,6 @@
 {
 	"tasks.add": "Add",
+	"tasks.add-action-first": "Save task to access its details",
 	"tasks.add-and-close-task": "Add and close task",
 	"tasks.add-task": "Add task",
 	"tasks.assigned-to": "Assigned to",
@@ -7,8 +8,10 @@
 	"tasks.incorrect-link": "Incorrect link",
 	"tasks.modified-action": "modified the task",
 	"tasks.no-participants": "No participants",
+	"tasks.no_participants": "No participants",
 	"tasks.participants": "Participants",
 	"tasks.priority": "Important",
+	"tasks.show-my-tasks-only": "My tasks only",
 	"tasks.status": "Status",
 	"tasks.statuses.done": "Done",
 	"tasks.statuses.open": "Open",
@@ -18,8 +21,10 @@
 	"tasks.task": "Task",
 	"tasks.task-lead": "Task assigned to ...",
 	"tasks.tasks": "Tasks",
+	"tasks.text-here-will-be-the-note-details": "Task details will appear here",
 	"tasks.title": "Title",
 	"tasks.visibilities.all": "All",
 	"tasks.visibilities.board": "Vonlunteers",
-	"tasks.visibilities.managers": "Managers"
+	"tasks.visibilities.managers": "Managers",
+	"tasks.with-closed-tasks": "Display closed tasks"
 }
