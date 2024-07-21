@@ -47,15 +47,15 @@ class KompoTasksServiceProvider extends ServiceProvider
     {
         $this->loadRoutes();
 
+        $this->app->bind('task-model', function () {
+            return new (config('tasks.task-model-namespace'));
+        });
+
         Relation::morphMap([
             'user' => \App\Models\User::class,
             'taskDetail' => TaskDetail::class,
             'task' => TaskModel::getClass(),
         ]);
-
-        $this->app->bind('task-model', function () {
-            return new (config('tasks.task-model-namespace'))();
-        });
     }
 
     protected function registerPolicies()

@@ -9,14 +9,17 @@ use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
 
 abstract class TaskInfoForm extends Form
 {
-	public $model = TaskModel::getClass();
-
 	protected $subtitle = 'TASK';
 
 	protected $threadId;
 	protected $tagIds;
 
 	protected $assignedCol = 'col-md-7';
+
+	public function created()
+	{
+		$this->model(TaskModel::getClass());
+	}
 
 	public function beforeSave()
 	{
