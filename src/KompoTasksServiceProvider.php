@@ -4,7 +4,7 @@ namespace Kompo\Tasks;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Policies\TaskDetailPolicy;
 use Kompo\Tasks\Policies\TaskPolicy;
@@ -50,7 +50,7 @@ class KompoTasksServiceProvider extends ServiceProvider
         Relation::morphMap([
             'user' => \App\Models\User::class,
             'taskDetail' => TaskDetail::class,
-            'task' => Task::class,
+            'task' => TaskModel::getClass(),
         ]);
 
         $this->app->bind('task-model', function () {
@@ -62,7 +62,7 @@ class KompoTasksServiceProvider extends ServiceProvider
     {
         $policies = [
             TaskDetail::class => TaskDetailPolicy::class,
-            Task::class => TaskPolicy::class,
+            TaskModel::getClass() => TaskPolicy::class,
         ];
 
         foreach ($policies as $key => $value) {

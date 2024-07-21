@@ -3,8 +3,7 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
-use Kompo\Tasks\Models\Task;
-use App\Models\User;
+use Kompo\Tasks\Facades\TaskModel;
 
 abstract class TasksMainView extends Query
 {
@@ -15,7 +14,7 @@ abstract class TasksMainView extends Query
 
 	public function query()
 	{
-        $query= Task::baseQuery()->forTeam();
+        $query= TaskModel::baseQuery()->forTeam();
 
         if (request('only_mine') || request('mine_urgent')) {
             $query = $query->where('assigned_to', auth()->id());
@@ -41,7 +40,7 @@ abstract class TasksMainView extends Query
                 )->filter(),
                 _TagsMultiSelect('tasks.tags')->filter()
             ),
-            !auth()->user()->can('create', Task::class) ? null : _FlexEnd(
+            !auth()->user()->can('create', TaskModel::getClass()) ? null : _FlexEnd(
                 _Link('tasks.add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,

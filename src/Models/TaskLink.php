@@ -3,7 +3,7 @@
 namespace Kompo\Tasks\Models;
 
 use Kompo\Auth\Models\Model;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 
 class TaskLink extends Model
 {
@@ -17,7 +17,7 @@ class TaskLink extends Model
 
 	public function task()
 	{
-		return $this->belongsTo(Task::class);
+		return $this->belongsTo(TaskModel::getClass());
 	}
 
     /* ACTIONS */

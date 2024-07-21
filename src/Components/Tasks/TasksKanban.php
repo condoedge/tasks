@@ -2,9 +2,8 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Illuminate\Support\Carbon;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
-use Kompo\Tasks\Models\Task;
 
 class TasksKanban extends TasksMainView
 {
@@ -50,7 +49,7 @@ class TasksKanban extends TasksMainView
 
 	public function changeStatus()
 	{
-		$task = Task::findOrFail(request('id'));
+		$task = TaskModel::findOrFail(request('id'));
 
 		if(!auth()->user()->can('update', $task))
 			return;

@@ -3,7 +3,6 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
-use Kompo\Tasks\Models\Task;
 use Kompo\Tasks\Models\TaskDetail;
 
 class TaskDetailsList extends Query
@@ -112,7 +111,7 @@ class TaskDetailsList extends Query
                 ->selfPost($action, ['id' => $taskDetail->id])
                 ->refresh()
                 ->browse(
-                    array_merge(Task::taskListsToRefresh(), [
+                    array_merge(TaskModel::taskListsToRefresh(), [
                         $this->taskCardId,
                     ])
                 );

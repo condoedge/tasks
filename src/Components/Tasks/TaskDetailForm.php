@@ -5,7 +5,7 @@ namespace Kompo\Tasks\Components\Tasks;
 use Kompo\Auth\Models\Files\File;
 use Kompo\Form;
 use Kompo\Tasks\Components\General\CKEditorExtended;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Models\TaskLink;
 
@@ -25,7 +25,7 @@ class TaskDetailForm extends Form
 	public function created()
 	{
 		$this->taskId = $this->store('task_id') ?: $this->model->task_id;
-		$this->task = Task::find($this->taskId);
+		$this->task = TaskModel::find($this->taskId);
 		$this->taskCardId = $this->store('task_card_id');
 
 		$this->fileInitialToggle = $this->prop('file_initial_toggle');
@@ -70,7 +70,7 @@ class TaskDetailForm extends Form
 								$e->selfPost('closeTask')
 									->refresh('task-adding-view')
 									->browse(
-										array_merge(Task::taskListsToRefresh(), [
+										array_merge(TaskModel::taskListsToRefresh(), [
 											$this->taskCardId,
 										])
 									);
@@ -79,7 +79,7 @@ class TaskDetailForm extends Form
 
 					_SubmitButton('tasks.add')->class('mr-2 w-full md:w-auto')
 						->browse(
-							array_merge(Task::taskListsToRefresh(), [
+							array_merge(TaskModel::taskListsToRefresh(), [
 								'task-participants-list-'.$this->taskId,
 								$this->taskCardId,
 							])
@@ -127,7 +127,7 @@ class TaskDetailForm extends Form
 
 	public function closeTask()
 	{
-		return Task::findOrFail($this->taskId)->close();
+		return TaskModel::findOrFail($this->taskId)->close();
 	}
 
 }

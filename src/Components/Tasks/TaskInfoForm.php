@@ -3,13 +3,13 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Form;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
-use Kompo\Tasks\Models\Task;
 
 abstract class TaskInfoForm extends Form
 {
-	public $model = Task::class;
+	public $model = TaskModel::getClass();
 
 	protected $subtitle = 'TASK';
 
@@ -130,7 +130,7 @@ abstract class TaskInfoForm extends Form
 
 	protected function taskRelatedLists()
 	{
-		return array_merge(Task::taskListsToRefresh(), [
+		return array_merge(TaskModel::taskListsToRefresh(), [
 			TasksCard::ID,
 		]);
 	}
