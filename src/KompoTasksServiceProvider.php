@@ -52,6 +52,10 @@ class KompoTasksServiceProvider extends ServiceProvider
             'taskDetail' => TaskDetail::class,
             'task' => Task::class,
         ]);
+
+        $this->app->bind('task-model', function () {
+            return new (config('tasks.task-model-namespace'))();
+        });
     }
 
     protected function registerPolicies()
