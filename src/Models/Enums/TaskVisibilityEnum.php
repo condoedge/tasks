@@ -14,9 +14,9 @@ enum TaskVisibilityEnum: int
     {
         return match ($this)
         {
-            static::ALL => __('translate.tasks.visibilities.all'),
-            static::BOARD => __('translate.tasks.visibilities.board'),
-            static::MANAGERS => __('translate.tasks.visibilities.managers'),
+            static::ALL => __('tasks.visibilities.all'),
+            static::BOARD => __('tasks.visibilities.board'),
+            static::MANAGERS => __('tasks.visibilities.managers'),
         };
     }
 }

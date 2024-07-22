@@ -3,7 +3,7 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 
 class TasksCard extends Query
 {
@@ -28,7 +28,7 @@ class TasksCard extends Query
 
     public function query()
     {
-        return Task::baseQuery()
+        return TaskModel::baseQuery()
                 ->when($this->onlyOfUser, fn($q) => $q->mine())
                 ->forTeam()
                 ->closed();
@@ -40,10 +40,10 @@ class TasksCard extends Query
             // auth()->user()->isContact() ? 'Follow-ups-tasks' : 
             'Tasks';
 
-        return _CardHeader($title, !auth()->user()->can('create', Task::class) ? null : [
+        return _CardHeader($title, !auth()->user()->can('create', TaskModel::getClass()) ? null : [
             _Link()->icon(_Sax('clipboard-tick',20))->href('tasks.kanban')
-                ->class('mr-2 text-xl')->balloon('task.see_all_tasks','up'),
-            _IconFilter('urgent', 'info-circle', 'task.filter_urgent')
+                ->class('mr-2 text-xl')->balloon('tasks.see_all_tasks','up'),
+            _IconFilter('urgent', 'info-circle', 'tasks.filter_urgent')
                 ->class('mr-2'),
             _Link()->icon(_Sax('add'))->balloon('Add')
                 ->get($this->editRoute, $this->routeParameters())

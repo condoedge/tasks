@@ -2,9 +2,8 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Illuminate\Support\Carbon;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
-use Kompo\Tasks\Models\Task;
 
 class TasksKanban extends TasksMainView
 {
@@ -22,29 +21,19 @@ class TasksKanban extends TasksMainView
     {
     	$this->columns = TaskStatusEnum::optionsWithLabels()->values()->toArray();
     	$this->columnStyle = 'min-width: 15rem; width: calc(25vw - 50px)';
-    	$this->emptyColumn = _Html('task.drag_card')
+    	$this->emptyColumn = _Html('tasks.drag-card')
     							->class('border-2 border-dashed border-gray-400 text-gray-600 text-center rounded-2xl py-6 mt-2');
 
     	$this->confirmBefore = [
 	    	'status' => TaskStatusEnum::CLOSED,
 	    	'attribute' => 'incomplete_task_details_min_reminder_at',
-	    	'message' => __('task.incomplete-task-reminders'),
+	    	'message' => __('tasks.incomplete-task-reminders'),
 	    ];
     }
 
 	public function query()
 	{
-        return parent::query()->where(function($q){
-
-            $q->notClosed()->orWhere(function($q){
-
-				$closedSinceDays = request('closed_since') ?: 2;
-
-                $q->closed()->where('closed_at', '>=', Carbon::now()->addDays(-$closedSinceDays));
-
-            });
-
-        });
+        return parent::query()->withClosedLogic();
 	}
 
 	public function render($task)
@@ -60,7 +49,7 @@ class TasksKanban extends TasksMainView
 
 	public function changeStatus()
 	{
-		$task = Task::findOrFail(request('id'));
+		$task = TaskModel::findOrFail(request('id'));
 
 		if(!auth()->user()->can('update', $task))
 			return;

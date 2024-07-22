@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7215e1f0bce8cf2b3ae293bd0d4378d",
+    "content-hash": "391e326bad0e561936278be2baa5e99f",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -1164,16 +1164,16 @@
         },
         {
             "name": "kompo/auth",
-            "version": "v0.2.11",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kompo/auth.git",
-                "reference": "4e382e39be652d839e29034b79c84327739b26ba"
+                "reference": "869b762905fae060166d4af6b8911922b1bd4cd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kompo/auth/zipball/4e382e39be652d839e29034b79c84327739b26ba",
-                "reference": "4e382e39be652d839e29034b79c84327739b26ba",
+                "url": "https://api.github.com/repos/kompo/auth/zipball/869b762905fae060166d4af6b8911922b1bd4cd9",
+                "reference": "869b762905fae060166d4af6b8911922b1bd4cd9",
                 "shasum": ""
             },
             "require": {
@@ -1206,9 +1206,9 @@
             "description": "Authentication and teams to your kompo application",
             "support": {
                 "issues": "https://github.com/kompo/auth/issues",
-                "source": "https://github.com/kompo/auth/tree/v0.2.11"
+                "source": "https://github.com/kompo/auth/tree/v0.3.1"
             },
-            "time": "2024-02-20T21:23:38+00:00"
+            "time": "2024-03-01T14:24:14+00:00"
         },
         {
             "name": "kompo/kompo",

@@ -3,6 +3,7 @@
 namespace Kompo\Tasks\Models;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kompo\Auth\Models\Model;
@@ -20,6 +21,7 @@ class Task extends Model
         'status' => TaskStatusEnum::class,
         'visibility' => TaskVisibilityEnum::class,
         'closed_at' => 'datetime',
+        'incomplete_task_details_min_reminder_at' => 'datetime',
     ];
 
     protected $translatable = [
@@ -118,6 +120,15 @@ class Task extends Model
         return $query->where('status', TaskStatusEnum::CLOSED);
     }
 
+    public function scopeWithClosedLogic($query, $closedSinceDays = 2)
+    {
+        return $query->where(fn($q) => $q->notClosed()
+            ->orWhere(fn($q) => $q->closed()
+                    ->where('closed_at', '>=', Carbon::now()->addDays(-(request('closed_since') ?: $closedSinceDays)))
+            )
+        );
+    }
+
     public function scopeUserVisibility($query)
     {
         // if(auth()->user()->isContact()) {
@@ -153,7 +164,7 @@ class Task extends Model
     public function taskCard()
     {
         $minReminderDate = $this->incomplete_task_details_min_reminder_at;
-
+        
         $taskRead = $this->task_details_count === $this->taskDetails->filter(fn($td) => $td->read)->count();
 
         $taskNotified = $this->unread_notifications_count ?: null;
@@ -208,10 +219,10 @@ class Task extends Model
     }
 
     /* ACTIONS */
-    public function markRead()
+    public function markAsRead()
     {
         \DB::transaction(function(){
-            $this->taskDetails()->with('read')->get()->each(fn($td) => $td->markRead());
+            $this->taskDetails()->with('read')->get()->each(fn($td) => $td->markAsRead());
         });
     }
 

@@ -22,7 +22,7 @@ class TaskForm extends TaskInfoForm
 			'redirectBackTo' => $this->store('redirectBackTo') ?: url()->previous()
 		]);
 
-		$this->model->markRead();
+		$this->model->markAsRead();
 
         // if($this->model->notifications()->forAuthUser()->count())
         //     $this->model->notifications()->forAuthUser()->get()->each->markSeen();
@@ -35,7 +35,7 @@ class TaskForm extends TaskInfoForm
 
 	public function render()
 	{
-		return $this->panelWrapper($this->model->title ?: 'task.add_task', 'annotation',
+		return $this->panelWrapper($this->model->title ?: 'tasks.add-task', 'annotation',
 
 			$this->singleColumn() ? null : $this->taskInfoElements()->col('col-md-5'),
 
@@ -69,7 +69,7 @@ class TaskForm extends TaskInfoForm
         		'task_card_id' => TasksCard::ID,
         	]) :
 
-        	_Html('task.add-action-first')
+        	_Html('tasks.add-action-first')
 				->class('my-4 mx-auto w-48 text-level1 text-center');
 	}
 

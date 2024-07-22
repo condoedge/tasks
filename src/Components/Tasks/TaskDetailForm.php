@@ -5,7 +5,7 @@ namespace Kompo\Tasks\Components\Tasks;
 use Kompo\Auth\Models\Files\File;
 use Kompo\Form;
 use Kompo\Tasks\Components\General\CKEditorExtended;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Models\TaskLink;
 
@@ -14,7 +14,7 @@ class TaskDetailForm extends Form
 	public $model = TaskDetail::class;
 
 	public $style = 'min-width:300px';
-    public $class = 'bg-gray-300 rounded-2xl mx-2 px-6 py-4';
+    public $class = 'bg-level4 rounded-2xl mx-2 px-6 py-4';
 
 	protected $taskId;
 	protected $task;
@@ -25,7 +25,7 @@ class TaskDetailForm extends Form
 	public function created()
 	{
 		$this->taskId = $this->store('task_id') ?: $this->model->task_id;
-		$this->task = Task::find($this->taskId);
+		$this->task = TaskModel::find($this->taskId);
 		$this->taskCardId = $this->store('task_card_id');
 
 		$this->fileInitialToggle = $this->prop('file_initial_toggle');
@@ -48,43 +48,43 @@ class TaskDetailForm extends Form
 
 		$this->processTaskDetails();
 
-		$this->model->markRead();
+		$this->model->markAsRead();
 	}
 
 	public function render()
 	{
-		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->allFiles()->count() : $this->fileInitialToggle
+		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle
 		// , $this->model->filesFromRelations()->pluck('id')
 		);
 
 		return [
 			_CKEditorExtended('')->name('details')->class('ckNoToolbar'),
 			$attachmentsBox,
-	        _FlexEnd2(
+	        !auth()->user()->can('create', TaskDetail::class) ? null : _FlexEnd2(
                 _Flex2 (
-				$attachmentsLink,
-        		($this->noTaskClosing || $this->task->isClosed()) ? null :
+					$attachmentsLink,
+					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :
 
-	        		_SubmitButton('task.add-and-close-task')->class('mr-2 mb-2 md:mb-0 w-full md:w-auto')->outlined()
-	        			->onSuccess(function($e){
-		        			$e->selfPost('closeTask')
-		        				->refresh('task-adding-view')
-		        				->browse(
-		        					array_merge(Task::taskListsToRefresh(), [
-		        						$this->taskCardId,
-									])
-		        				);
-	        			})
-                    )->class('w-full md:w-auto'),
+						_SubmitButton('tasks.add-and-close-task')->class('mr-2 mb-2 md:mb-0 w-full md:w-auto')->outlined()
+							->onSuccess(function($e){
+								$e->selfPost('closeTask')
+									->refresh('task-adding-view')
+									->browse(
+										array_merge(TaskModel::taskListsToRefresh(), [
+											$this->taskCardId,
+										])
+									);
+							})
+						)->class('w-full md:w-auto'),
 
-            	_SubmitButton('Add')->class('mr-2 w-full md:w-auto')
-		        	->browse(
-		        		array_merge(Task::taskListsToRefresh(), [
-			        		'task-participants-list-'.$this->taskId,
-			        		$this->taskCardId,
-						])
-		        	)->refresh('task-details-list-'.$this->taskId)
-	        )->class('flex-wrap'),
+					_SubmitButton('tasks.add')->class('mr-2 w-full md:w-auto')
+						->browse(
+							array_merge(TaskModel::taskListsToRefresh(), [
+								'task-participants-list-'.$this->taskId,
+								$this->taskCardId,
+							])
+						)->refresh('task-details-list-'.$this->taskId)
+				)->class('flex-wrap'),
 	    ];
 	}
 
@@ -127,7 +127,7 @@ class TaskDetailForm extends Form
 
 	public function closeTask()
 	{
-		return Task::findOrFail($this->taskId)->close();
+		return TaskModel::findOrFail($this->taskId)->close();
 	}
 
 }

@@ -2,7 +2,12 @@
 
 namespace Kompo\Tasks;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Kompo\Tasks\Facades\TaskModel;
+use Kompo\Tasks\Models\TaskDetail;
+use Kompo\Tasks\Policies\TaskDetailPolicy;
+use Kompo\Tasks\Policies\TaskPolicy;
 
 class KompoTasksServiceProvider extends ServiceProvider
 {
@@ -17,9 +22,11 @@ class KompoTasksServiceProvider extends ServiceProvider
     {
         $this->loadHelpers();
 
+        $this->registerPolicies();
+
         $this->extendRouting();
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'ct');
+        $this->loadJSONTranslationsFrom(__DIR__.'/../resources/lang');
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
@@ -39,6 +46,28 @@ class KompoTasksServiceProvider extends ServiceProvider
     public function register()
     {
         $this->loadRoutes();
+
+        $this->app->bind('task-model', function () {
+            return new (config('tasks.task-model-namespace'));
+        });
+
+        Relation::morphMap([
+            'user' => \App\Models\User::class,
+            'taskDetail' => TaskDetail::class,
+            'task' => TaskModel::getClass(),
+        ]);
+    }
+
+    protected function registerPolicies()
+    {
+        $policies = [
+            TaskDetail::class => TaskDetailPolicy::class,
+            TaskModel::getClass() => TaskPolicy::class,
+        ];
+
+        foreach ($policies as $key => $value) {
+            \Gate::policy($key, $value);
+        }
     }
 
     protected function loadHelpers()

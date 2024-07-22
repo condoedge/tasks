@@ -6,6 +6,7 @@ use Kompo\Auth\Models\Files\File;
 use Kompo\Auth\Models\Files\MorphManyFilesTrait;
 use Kompo\Auth\Models\Model;
 use Kompo\Auth\Models\Traits\BelongsToUserTrait;
+use Kompo\Tasks\Facades\TaskModel;
 
 class TaskDetail extends Model
 {
@@ -24,7 +25,7 @@ class TaskDetail extends Model
     /* RELATIONSHIPS */
     public function task()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsTo(TaskModel::getClass());
     }
 
     public function reads()

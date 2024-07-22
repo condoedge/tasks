@@ -3,7 +3,7 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
-use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Facades\TaskModel;
 
 abstract class TasksMainView extends Query
 {
@@ -14,7 +14,7 @@ abstract class TasksMainView extends Query
 
 	public function query()
 	{
-        $query= Task::baseQuery()->where('team_id', currentTeam()->id);
+        $query= TaskModel::baseQuery()->forTeam();
 
         if (request('only_mine') || request('mine_urgent')) {
             $query = $query->where('assigned_to', auth()->id());
@@ -31,24 +31,25 @@ abstract class TasksMainView extends Query
 
 	public function top()
 	{
-		return $this->topFilterHeader('Tasks',
+		return $this->topFilterHeader('tasks.tasks',
             _Columns(
-                _Input('Title')->name('title')->filter(),
-                _MultiSelect('task.assigned-to')->name('assigned_to')->options(
-                    currentTeam()->users()->pluck('users.name', 'users.id')
+                _Input('tasks.title')->name('title')->filter(),
+                _MultiSelect('tasks.assigned-to')->name('assigned_to')->options(
+                    currentTeam()->assignToOptions(),
+                        // ->pluck('users.name', 'users.id')
                 )->filter(),
-                _TagsMultiSelect('Tags')->filter()
+                _TagsMultiSelect('tasks.tags')->filter()
             ),
-            _FlexEnd(
-                _Link('task.add_task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
+            !auth()->user()->can('create', TaskModel::getClass()) ? null : _FlexEnd(
+                _Link('tasks.add-task')->icon('icon-plus')->button()->get('task.form')->inDrawer()
             )->class('mt-2 sm:mt-0'),
             null,
             _Flex(
-                $this->selectLinkFilter(auth()->user()->id, 'profile-circle', 'task.show-my-tasks-only')
+                $this->selectLinkFilter(auth()->user()->id, 'profile-circle', 'tasks.show-my-tasks-only')
                     ->name('only_mine', false)->default($this->defaultAssignedTo),
-                $this->selectLinkFilter(1, 'info-circle', 'Priority')
+                $this->selectLinkFilter(1, 'info-circle', 'tasks.priority')
                     ->name('urgent', false)->default($this->defaultUrgency),
-                $this->selectLinkFilter(365, 'tick-circle', 'task.with-closed-tasks')
+                $this->selectLinkFilter(365, 'tick-circle', 'tasks.with-closed-tasks')
                     ->name('closed_since', false),
             )
         )->class('flex-wrap');

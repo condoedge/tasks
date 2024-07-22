@@ -3,20 +3,23 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Form;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
-use Kompo\Tasks\Models\Task;
 
 abstract class TaskInfoForm extends Form
 {
-	public $model = Task::class;
-
 	protected $subtitle = 'TASK';
 
 	protected $threadId;
 	protected $tagIds;
 
 	protected $assignedCol = 'col-md-7';
+
+	public function created()
+	{
+		$this->model(TaskModel::getClass());
+	}
 
 	public function beforeSave()
 	{
@@ -30,7 +33,7 @@ abstract class TaskInfoForm extends Form
 		return _Rows(
 	        _Rows(
 	        	_FlexBetween(
-	        		_MiniTitle('task.task'),
+	        		_MiniTitle('tasks.task'),
 	        		$this->taskDeleteLink()
 				)->class('mt-4'),
 
@@ -44,11 +47,11 @@ abstract class TaskInfoForm extends Form
 			)->class('card-gray-100 px-6 mx-4 !space-y-2 pb-5'),
 
 	        _Rows(
-				_MiniTitle('assigned_to')->class('mt-4'),
+				_MiniTitle('tasks.assigned-to')->class('mt-4'),
 				$this->submitsRefresh(
-					_Select()->placeholder('task.task-lead')->name('assigned_to')
+					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
-							currentTeam()->users()->pluck('users.name', 'users.id')
+							currentTeam()->assignToOptions(),
 						)
 						->icon(_Sax('profile'))
 						->default(auth()->user()->id)
@@ -91,12 +94,12 @@ abstract class TaskInfoForm extends Form
 
 	protected function titleInput()
 	{
-		return _Translatable()->placeholder('Title')->name('title');
+		return _Translatable()->placeholder('tasks.title')->name('title');
 	}
 
 	protected function statusInput()
 	{
-		return _Select()->placeholder('Status')->name('status')
+		return _Select()->placeholder('tasks.status')->name('status')
 			->options(TaskStatusEnum::optionsWithLabels())
 			->default(TaskStatusEnum::OPEN);
 	}
@@ -105,14 +108,14 @@ abstract class TaskInfoForm extends Form
 	{
 		return _Rows(
 			$this->submitsRefresh(
-				_Select()->name('Visibility')
+				_Select()
                 ->name('visibility')
                 ->icon(_Sax('eye'))
                 ->options(TaskVisibilityEnum::optionsWithLabels())
-                ->default(TaskVisibilityEnum::MANAGERS)
+                ->default(TaskVisibilityEnum::ALL)
 			),
 
-			$this->model->id ? $this->submitsRefresh(_Checkbox('Priority')->name('urgent')) : null,
+			$this->model->id ? $this->submitsRefresh(_Checkbox('tasks.priority')->name('urgent')) : null,
 		);
 	}
 
@@ -130,7 +133,7 @@ abstract class TaskInfoForm extends Form
 
 	protected function taskRelatedLists()
 	{
-		return array_merge(Task::taskListsToRefresh(), [
+		return array_merge(TaskModel::taskListsToRefresh(), [
 			TasksCard::ID,
 		]);
 	}
@@ -140,7 +143,7 @@ abstract class TaskInfoForm extends Form
 		if(!auth()->user()->can('delete', $this->model))
 			return;
 
-		return _DeleteLink()->byKey($this->model)->class('text-gray-500')
+		return _Delete($this->model)->class('text-gray-500')
 			->closeSlidingPanel()
 			->browse($this->taskRelatedLists());
 	}

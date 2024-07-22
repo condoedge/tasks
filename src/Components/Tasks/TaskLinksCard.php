@@ -20,7 +20,7 @@ class TaskLinksCard extends Query
 
     public function top()
     {
-        return _MiniTitle('Participants')->class('mb-2');
+        return _MiniTitle('tasks.participants')->class('mb-2');
     }
 
     public function render($taskLink)
@@ -37,10 +37,10 @@ class TaskLinksCard extends Query
         return _FlexBetween(
             _Flex(
                 _Sax('profile')->class('text-gray-600 mr-2'),
-                _Html($name ?? 'Incorrect Link')
+                _Html($name ?? 'tasks.incorrect-link')
             ),
             _FlexEnd(
-                _DeleteLink()->byKey($taskLink)->class('text-gray-300 mr-2'),
+                _Delete($taskLink)->class('text-gray-300 mr-2'),
                 !$submenu ? null : _TripleDotsDropdown($submenu),
             )
 
@@ -49,6 +49,6 @@ class TaskLinksCard extends Query
 
     public function noItemsFound()
     {
-        return _Html('task.no_participants')->class('text-gray-600 text-sm');
+        return _Html('tasks.no-participants')->class('text-gray-600 text-sm');
     }
 }

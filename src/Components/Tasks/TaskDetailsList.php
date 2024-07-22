@@ -3,7 +3,6 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
-use Kompo\Tasks\Models\Task;
 use Kompo\Tasks\Models\TaskDetail;
 
 class TaskDetailsList extends Query
@@ -23,7 +22,7 @@ class TaskDetailsList extends Query
 
     public function query()
     {
-        return TaskDetail::with('user', 'files', 'relatedFiles.parent2')
+        return TaskDetail::with('user', 'files')
             ->where('task_id', $this->taskId)->orderBy('created_at', 'DESC');
     }
 
@@ -45,48 +44,51 @@ class TaskDetailsList extends Query
 
     public function render($td)
     {
-        $allFiles = $td->allFiles();
+        $allFiles = $td->files;
 
     	return _Rows(
             _FlexBetween(
                 _Html($td->created_at->diffForHumans()),
                 _Html($td->created_at->format('d M Y H:i'))
-            )->class('text-xs text-level2'),
+            )->class('text-xs text-level1'),
 
 
             _FlexBetween(
-                _Html($td->user?->name.' '.__('task.modified-action'))->class('text-xs text-gray-500 mb-2'),
+                _Html($td->user?->name.' '.__('tasks.modified-action'))->class('text-xs text-level1 opacity-60 mb-2'),
                 _FlexEnd(
                     auth()->user()->can('update', $td) ?
                         _Link()->icon(_Sax('edit',20))->class('mr-2')->selfUpdate('getTaskDetailForm', ['id' => $td->id])->inModal() :
                         null,
-                    auth()->user()->can('delete', $td) ? _DeleteLink()->byKey($td) : null
+                    auth()->user()->can('delete', $td) ? _Delete($td) : null
                 )
-            )->class('text-level2'),
+            )->class('text-level1'),
 
-            _Html($td->details)->class('ck ck-content text-level2'),
+            _Html($td->details)->class('ck ck-content text-black'),
 
             !$allFiles->count() ? null :
 
                 _Flex(
                     $allFiles->map(function($file){
-                        return $file->fileThumbnail();
+                        return _Link($file->name)->class('mt-1 -mr-2')->col('col-md-3')
+                            ->icon('arrow-down')
+                            ->href($file->link)
+                            ->attr(['download' => $file->name]);
                     })
-                )->class('mt-2'),
+                )->class('mt-4 gap-4'),
 
             !$td->reminder_at ? null :
 
                 _FlexEnd(
                     $td->completed_at ?
 
-                        $this->completedButton('task.completed', 'resetTaskDetail', $td) :
+                        $this->completedButton('tasks.completed', 'resetTaskDetail', $td) :
 
                         (
                             // auth()->user()->isContact() ? null :
-                            $this->completedButton('task.marked_complete', 'completeTaskDetail', $td)
+                            $this->completedButton('tasks.marked_complete', 'completeTaskDetail', $td)
                         )
                 ),
-        )->class('text-sm p-6 m-2 rounded-2xl bg-gray-100');
+        )->class('text-sm p-6 m-2 rounded-2xl bg-level4 bg-opacity-30');
     }
 
     public function getTaskDetailForm($id)
@@ -109,7 +111,7 @@ class TaskDetailsList extends Query
                 ->selfPost($action, ['id' => $taskDetail->id])
                 ->refresh()
                 ->browse(
-                    array_merge(Task::taskListsToRefresh(), [
+                    array_merge(TaskModel::taskListsToRefresh(), [
                         $this->taskCardId,
                     ])
                 );
@@ -117,7 +119,7 @@ class TaskDetailsList extends Query
 
     public function noItemsFound()
     {
-        return _Html('task.text-here-will-be-the-note-details')
+        return _Html('tasks.text-here-will-be-the-note-details')
             ->class('my-4 px-6 mx-auto text-gray-600 text-center text-xs');
     }
 

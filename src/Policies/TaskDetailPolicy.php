@@ -41,7 +41,7 @@ class TaskDetailPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('taskDetails:create');
     }
 
     /**
@@ -53,7 +53,9 @@ class TaskDetailPolicy
      */
     public function update(User $user, TaskDetail $taskDetail)
     {
-        return $taskDetail->user_id == $user->id;
+        return $taskDetail->created_by == $user->id || 
+            ($taskDetail->task->team_id == $user->current_team_id && $user->hasPermission('taskDetails:updateOfTeam')) ||
+            $user->hasPermission('taskDetails:update');
     }
 
     /**
@@ -65,7 +67,9 @@ class TaskDetailPolicy
      */
     public function delete(User $user, TaskDetail $taskDetail)
     {
-        return $taskDetail->user_id == $user->id;
+        return $taskDetail->created_by == $user->id || 
+            ($taskDetail->task->team_id == $user->current_team_id && $user->hasPermission('taskDetails:deleteOfTeam')) ||
+            $user->hasPermission('taskDetails:delete');
     }
 
     /**
