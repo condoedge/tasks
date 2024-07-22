@@ -19,7 +19,7 @@ class KompoTasksServiceProvider extends ServiceProvider
 
         $this->extendRouting();
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kompo-tasks');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'ct');
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
@@ -47,10 +47,7 @@ class KompoTasksServiceProvider extends ServiceProvider
 
         $autoloadedHelpers = collect(\File::allFiles($helpersDir))->map(fn($file) => $file->getRealPath());
 
-        $packageHelpers = [
-        ];
-
-        $autoloadedHelpers->concat($packageHelpers)->each(function ($path) {
+        $autoloadedHelpers->each(function ($path) {
             if (file_exists($path)) {
                 require_once $path;
             }
