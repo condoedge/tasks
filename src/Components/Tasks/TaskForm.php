@@ -12,6 +12,8 @@ class TaskForm extends TaskInfoForm
 
 	public function created()
 	{
+		parent::created();
+		
         $this->id('task-adding-view');
 
 		$this->style = 
