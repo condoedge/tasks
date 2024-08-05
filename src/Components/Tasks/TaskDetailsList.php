@@ -3,6 +3,7 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 
 class TaskDetailsList extends Query
