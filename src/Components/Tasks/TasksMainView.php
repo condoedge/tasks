@@ -93,7 +93,7 @@ abstract class TasksMainView extends Query
         return _HtmlField()->selectedValue($value)
             ->icon(_Sax($icon,20))->balloon($balloonLabel, $balloonPos)
             ->class('ml-2 p-2 text-xl leading-3 rounded-full border border-level1 cursor-pointer')
-            ->selectedClass('bg-info text-white')
+            ->selectedClass('bg-warning text-white border-warning')
             ->filter();
     }
 }

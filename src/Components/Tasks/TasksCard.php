@@ -45,7 +45,7 @@ class TasksCard extends Query
                 ->class('mr-2 text-xl')->balloon('tasks.see_all_tasks','up'),
             _IconFilter('urgent', 'info-circle', 'tasks.filter_urgent')
                 ->class('mr-2'),
-            _Link()->icon(_Sax('add'))->balloon('Add')
+            _Link()->icon(_Sax('add'))->balloon('tasks.add')
                 ->get($this->editRoute, $this->routeParameters())
                 ->inDrawer()
         ]);
