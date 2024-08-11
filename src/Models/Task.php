@@ -218,6 +218,12 @@ class Task extends Model
         ];
     }
 
+    public function statusPill()
+    {
+        return _Pill($this->status->label())
+            ->class('text-white')->class($this->status->color());
+    }
+
     /* ACTIONS */
     public function markAsRead()
     {

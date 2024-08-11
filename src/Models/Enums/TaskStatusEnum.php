@@ -21,4 +21,15 @@ enum TaskStatusEnum: int
             static::CLOSED => __('tasks.statuses.done')
         };
     }
+
+    public function color()
+    {
+        return match ($this)
+        {
+            static::OPEN => 'bg-info',
+            static::PENDING => 'bg-warning',
+            static::PROCESSING => 'bg-warning',
+            static::CLOSED => 'bg-green'
+        };
+    }
 }
