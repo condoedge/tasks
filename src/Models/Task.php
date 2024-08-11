@@ -200,10 +200,20 @@ class Task extends Model
     {
         return _TripleDotsDropdown(
             _Rows(
-                _Html($this->status_label)->icon('icon-question-circle'),
-                $this->urgent ? _Html('Priority')->icon(_Sax('info-circle')) : null,
-                $this->public ? _Html('publicly_visible')->icon('speakerphone') : null
-            )->class('w-48 text-level3 border border-gray-300 rounded-xl p-6')
+                _Flex(
+                    _Sax('document-normal')->class('mr-2 text-greenmain opacity-60'),
+                    _Html($this->status_label),
+                ),
+                $this->urgent ? _Flex(
+                    _Sax('info-circle')->class('mr-2 text-greenmain opacity-60'),
+                    _Html('tasks.priority'),
+                ) : null,
+                $this->public ? 
+                _Flex(
+                    _Sax('eye')->class('mr-2 text-greenmain opacity-60'),
+                    _Html('tasks.publicly-visible'),
+                ) : null,
+            )->class('gap-2 w-48 text-black p-6 text-base')
         );
     }
 
