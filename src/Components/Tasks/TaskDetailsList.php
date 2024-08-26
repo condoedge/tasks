@@ -3,6 +3,7 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Query;
+use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 
 class TaskDetailsList extends Query
@@ -85,7 +86,7 @@ class TaskDetailsList extends Query
 
                         (
                             // auth()->user()->isContact() ? null :
-                            $this->completedButton('tasks.marked_complete', 'completeTaskDetail', $td)
+                            $this->completedButton('tasks.mark-as-completed', 'completeTaskDetail', $td)
                         )
                 ),
         )->class('text-sm p-6 m-2 rounded-2xl bg-level4 bg-opacity-30');

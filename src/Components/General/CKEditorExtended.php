@@ -15,7 +15,7 @@ class CKEditorExtended extends CKEditor
 			'date-component' => _DateTime()->class('datetime-mention mb-0'),
 		]);
 
-		$this->addMention('@', $this->users()->get(), 0, 'icon-profile', 'name', 'user', __('User'));
+		$this->addMention('@', $this->users()->get(), 0, 'icon-profile', 'name', 'user', __('tasks.user'));
 
         return $this;
 	}
