@@ -7,6 +7,8 @@ use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
 
+use Kompo\Auth\Facades\TeamModel;
+
 abstract class TaskInfoForm extends Form
 {
 	protected $subtitle = 'TASK';
@@ -23,8 +25,6 @@ abstract class TaskInfoForm extends Form
 
 	public function beforeSave()
 	{
-		$this->model->team_id = currentTeamId();
-
 		$this->model->handleStatusChange(request('status'));
 	}
 
@@ -48,6 +48,11 @@ abstract class TaskInfoForm extends Form
 
 	        _Rows(
 				_MiniTitle('tasks.assigned-to')->class('mt-4'),
+				$this->submitsRefresh(
+					_Select()->placeholder('translate.team-assigment')->name('team_id')
+						->searchOptions(0, 'searchTeamChildren')
+						->default(currentTeamId())
+				),
 				$this->submitsRefresh(
 					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
@@ -90,6 +95,13 @@ abstract class TaskInfoForm extends Form
 				->noGutters()
 			)->class('h-full')
 		)->class('overflow-auto mini-scroll h-screen');
+	}
+
+	public function searchTeamChildren()
+	{
+		return TeamModel::parseOptions(
+			TeamModel::active()->validForTasks()->whereIn('id', currentTeam()->getAllChildrenRawSolution())->get()
+		);
 	}
 
 	protected function titleInput()
@@ -153,6 +165,7 @@ abstract class TaskInfoForm extends Form
 		return [
 			'title' => 'required|max:255',
 			'status' => 'required',
+			'team_id' => 'required',
 		];
 	}
 }
