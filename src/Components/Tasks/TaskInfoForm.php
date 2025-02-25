@@ -46,7 +46,7 @@ abstract class TaskInfoForm extends Form
 	        _Rows(
 				_MiniTitle('tasks.assigned-to')->class('mt-4'),
 				$this->submitsRefresh(
-					_Select()->placeholder('translate.team-assigment')->name('team_id')
+					_Select()->placeholder('tasks.team-assigment')->name('team_id')
 						->searchOptions(0, 'searchTeamChildren')
 						->default(currentTeamId())
 				),
