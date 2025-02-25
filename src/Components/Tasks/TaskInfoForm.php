@@ -32,10 +32,7 @@ abstract class TaskInfoForm extends Form
 	{
 		return _Rows(
 	        _Rows(
-	        	_FlexBetween(
-	        		_MiniTitle('tasks.task'),
-	        		$this->taskDeleteLink()
-				)->class('mt-4'),
+				_MiniTitle('tasks.task')->class('mt-4'),
 
 				$this->submitsRefresh(
 					$this->titleInput()
@@ -78,11 +75,15 @@ abstract class TaskInfoForm extends Form
 	protected function panelWrapper($title, $icon, $col1, $col2 = null)
 	{
 		return _Rows(
-			_PageTitle($title)
-				->icon(
-					_Svg($icon)->class('text-5xl')
-				)
-				->class('p-4 py-2 md:py-4 bg-white'),
+			_Columns(
+				_FlexBetween(
+					_PageTitle($title)
+						->icon(
+							_Svg($icon)->class('text-5xl')
+						),
+					$this->taskDeleteLink(),
+				)->class('p-4 py-2 md:py-4 bg-white items-center')->col('col-md-5')
+			),
 			_Rows(
 				_Columns(
 					!$col1 ? null : $col1
@@ -155,7 +156,7 @@ abstract class TaskInfoForm extends Form
 		if(!auth()->user()->can('delete', $this->model))
 			return;
 
-		return _Delete($this->model)->class('text-gray-500')
+		return _Delete($this->model)->class('text-gray-500 hover:text-danger')
 			->closeSlidingPanel()
 			->browse($this->taskRelatedLists());
 	}
