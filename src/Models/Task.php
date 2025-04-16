@@ -4,13 +4,13 @@ namespace Kompo\Tasks\Models;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Condoedge\Utils\Models\Model;
+use Condoedge\Utils\Models\Tags\MorphToManyTagsTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Kompo\Auth\Models\Model;
 use Kompo\Auth\Models\Teams\BelongsToTeamTrait;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
-use Kompo\Auth\Models\Tags\MorphToManyTagsTrait;
 use Kompo\Database\HasTranslations;
 
 class Task extends Model

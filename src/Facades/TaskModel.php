@@ -3,14 +3,13 @@
 namespace Kompo\Tasks\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Kompo\Auth\Facades\FacadeUtils;
 
 /**
  * @mixin \Kompo\Tasks\Models\Task
  */
 class TaskModel extends Facade
 {
-    use FacadeUtils;
+    use \Condoedge\Utils\Facades\FacadeUtils;
 
     protected static function getFacadeAccessor()
     {

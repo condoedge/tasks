@@ -4,7 +4,7 @@ namespace Kompo\Tasks\Models\Enums;
 
 enum TaskVisibilityEnum: int
 {
-    use \Kompo\Auth\Models\Traits\EnumKompo;
+    use \Condoedge\Utils\Models\Traits\EnumKompo;
 
 	case ALL = 1;
 	case BOARD = 2;

@@ -2,9 +2,8 @@
 
 namespace Kompo\Tasks\Models;
 
-use Kompo\Auth\Models\Files\File;
-use Kompo\Auth\Models\Files\MorphManyFilesTrait;
-use Kompo\Auth\Models\Model;
+use Condoedge\Utils\Models\Files\MorphManyFilesTrait;
+use Condoedge\Utils\Models\Model;
 use Kompo\Auth\Models\Traits\BelongsToUserTrait;
 use Kompo\Tasks\Facades\TaskModel;
 

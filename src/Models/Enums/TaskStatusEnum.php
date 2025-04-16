@@ -4,7 +4,7 @@ namespace Kompo\Tasks\Models\Enums;
 
 enum TaskStatusEnum: int
 {
-    use \Kompo\Auth\Models\Traits\EnumKompo;
+    use \Condoedge\Utils\Models\Traits\EnumKompo;
 
 	case OPEN = 0;
 	case PENDING = 1;

@@ -2,7 +2,7 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Query;
+use Condoedge\Utils\Kompo\Common\Query;
 use Kompo\Tasks\Facades\TaskModel;
 
 class TasksCard extends Query

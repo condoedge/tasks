@@ -2,7 +2,7 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Form;
+use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
