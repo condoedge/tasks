@@ -2,12 +2,12 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Auth\Models\Files\File;
-use Kompo\Form;
+use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Tasks\Components\General\CKEditorExtended;
 use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Models\TaskLink;
+use Condoedge\Utils\Facades\FileModel;
 
 class TaskDetailForm extends Form
 {
@@ -53,7 +53,7 @@ class TaskDetailForm extends Form
 
 	public function render()
 	{
-		[$attachmentsLink, $attachmentsBox] = File::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle
+		[$attachmentsLink, $attachmentsBox] = FileModel::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle
 		// , $this->model->filesFromRelations()->pluck('id')
 		);
 

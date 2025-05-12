@@ -2,10 +2,12 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Form;
+use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
+
+use Kompo\Auth\Facades\TeamModel;
 
 abstract class TaskInfoForm extends Form
 {
@@ -23,8 +25,6 @@ abstract class TaskInfoForm extends Form
 
 	public function beforeSave()
 	{
-		$this->model->team_id = currentTeamId();
-
 		$this->model->handleStatusChange(request('status'));
 	}
 
@@ -32,10 +32,7 @@ abstract class TaskInfoForm extends Form
 	{
 		return _Rows(
 	        _Rows(
-	        	_FlexBetween(
-	        		_MiniTitle('tasks.task'),
-	        		$this->taskDeleteLink()
-				)->class('mt-4'),
+				_MiniTitle('tasks.task')->class('mt-4'),
 
 				$this->submitsRefresh(
 					$this->titleInput()
@@ -48,6 +45,11 @@ abstract class TaskInfoForm extends Form
 
 	        _Rows(
 				_MiniTitle('tasks.assigned-to')->class('mt-4'),
+				$this->submitsRefresh(
+					_Select()->placeholder('tasks.team-assigment')->name('team_id')
+						->searchOptions(0, 'searchTeamChildren')
+						->default(currentTeamId())
+				),
 				$this->submitsRefresh(
 					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
@@ -73,11 +75,15 @@ abstract class TaskInfoForm extends Form
 	protected function panelWrapper($title, $icon, $col1, $col2 = null)
 	{
 		return _Rows(
-			_PageTitle($title)
-				->icon(
-					_Svg($icon)->class('text-5xl')
-				)
-				->class('p-4 py-2 md:py-4 bg-white'),
+			_Columns(
+				_FlexBetween(
+					_PageTitle($title)
+						->icon(
+							_Svg($icon)->class('text-5xl')
+						),
+					$this->taskDeleteLink(),
+				)->class('p-4 py-2 md:py-4 bg-white items-center')->col('col-md-5')
+			),
 			_Rows(
 				_Columns(
 					!$col1 ? null : $col1
@@ -90,6 +96,13 @@ abstract class TaskInfoForm extends Form
 				->noGutters()
 			)->class('h-full')
 		)->class('overflow-auto mini-scroll h-screen');
+	}
+
+	public function searchTeamChildren()
+	{
+		return TeamModel::parseOptions(
+			TeamModel::active()->validForTasks()->whereIn('id', currentTeam()->getAllChildrenRawSolution())->get()
+		);
 	}
 
 	protected function titleInput()
@@ -143,7 +156,7 @@ abstract class TaskInfoForm extends Form
 		if(!auth()->user()->can('delete', $this->model))
 			return;
 
-		return _Delete($this->model)->class('text-gray-500')
+		return _Delete($this->model)->class('text-gray-500 hover:text-danger')
 			->closeSlidingPanel()
 			->browse($this->taskRelatedLists());
 	}
@@ -153,6 +166,7 @@ abstract class TaskInfoForm extends Form
 		return [
 			'title' => 'required|max:255',
 			'status' => 'required',
+			'team_id' => 'required',
 		];
 	}
 }

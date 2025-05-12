@@ -5,14 +5,14 @@ namespace Kompo\Tasks\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @mixin \Kompo\Tasks\Models\Task
+ * @mixin \Kompo\Tasks\Models\TaskDetail
  */
-class TaskModel extends Facade
+class TaskDetailModel extends Facade
 {
     use \Condoedge\Utils\Facades\FacadeUtils;
 
     protected static function getFacadeAccessor()
     {
-        return 'task-model';
+        return 'task-detail-model';
     }
 }

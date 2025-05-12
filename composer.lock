@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "391e326bad0e561936278be2baa5e99f",
+    "content-hash": "a60e1de208e34f6c1bc943da37eb9fbf",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -321,6 +321,48 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "condoedge/utils",
+            "version": "v0.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/condoedge/utils.git",
+                "reference": "c770d759e301d7465b74e753757f55426f7d699d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/condoedge/utils/zipball/c770d759e301d7465b74e753757f55426f7d699d",
+                "reference": "c770d759e301d7465b74e753757f55426f7d699d",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=5.6.0",
+                "php": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Condoedge\\Utils\\CondoedgeUtilsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Condoedge\\Utils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Utils helpers module to your kompo application",
+            "support": {
+                "issues": "https://github.com/condoedge/utils/issues",
+                "source": "https://github.com/condoedge/utils/tree/v0.0.6"
+            },
+            "time": "2025-04-15T14:55:56+00:00"
         },
         {
             "name": "dasprid/enum",

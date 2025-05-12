@@ -2,7 +2,7 @@
 
 namespace Kompo\Tasks\Models;
 
-use Kompo\Auth\Models\Model;
+use Condoedge\Utils\Models\Model;
 use Kompo\Tasks\Facades\TaskModel;
 
 class TaskLink extends Model

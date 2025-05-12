@@ -4,7 +4,7 @@ namespace Kompo\Tasks\Models\Enums;
 
 enum TaskStatusEnum: int
 {
-    use \Kompo\Auth\Models\Traits\EnumKompo;
+    use \Condoedge\Utils\Models\Traits\EnumKompo;
 
 	case OPEN = 0;
 	case PENDING = 1;
@@ -19,6 +19,17 @@ enum TaskStatusEnum: int
             static::PENDING => __('tasks.statuses.pending'),
             static::PROCESSING => __('tasks.statuses.processing'),
             static::CLOSED => __('tasks.statuses.done')
+        };
+    }
+
+    public function color()
+    {
+        return match ($this)
+        {
+            static::OPEN => 'bg-info',
+            static::PENDING => 'bg-warning',
+            static::PROCESSING => 'bg-warning',
+            static::CLOSED => 'bg-green'
         };
     }
 }

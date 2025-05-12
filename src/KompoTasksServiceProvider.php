@@ -53,6 +53,10 @@ class KompoTasksServiceProvider extends ServiceProvider
             return new (config('kompo-tasks.task-model-namespace'));
         });
 
+        $this->app->bind('task-detail-model', function () {
+            return new (config('tasks.task-detail-model-namespace'));
+        });
+
         Relation::morphMap([
             'user' => \App\Models\User::class,
             'taskDetail' => TaskDetail::class,

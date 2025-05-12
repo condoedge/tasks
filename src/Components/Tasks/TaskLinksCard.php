@@ -2,7 +2,7 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Query;
+use Condoedge\Utils\Kompo\Common\Query;
 use Kompo\Tasks\Models\Contracts\Taskable;
 use Kompo\Tasks\Models\TaskLink;
 
