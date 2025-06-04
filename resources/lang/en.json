@@ -5,6 +5,7 @@
 	"tasks.add-task": "Add task",
 	"tasks.assigned-to": "Assigned to",
 	"tasks.completed": "Completed",
+	"tasks.created-from-email": "Task created from email",
 	"tasks.drag-card": "Drag card",
 	"tasks.filter": "Filter",
 	"tasks.incorrect-link": "Incorrect link",

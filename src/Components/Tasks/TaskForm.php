@@ -2,11 +2,16 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
+use Kompo\Tasks\Models\Task;
+use Kompo\Tasks\Models\TaskDetail;
+
 class TaskForm extends TaskInfoForm
 {
     protected $slug = 'tasks';
 
 	protected $refresh = true;
+	
+	protected $threadId;
 
 	public $class = 'bg-white rounded-l-2xl';
 
@@ -33,6 +38,25 @@ class TaskForm extends TaskInfoForm
 			$this->_kompo('options', [
 				'refresh' => false
 			]);
+
+		if ($this->threadId = $this->prop('thread_id')) {
+
+			$thread = \Condoedge\Messaging\Models\CustomInbox\Thread::findOrFail($this->threadId);
+
+			$task = Task::where('from_thread_id', $this->threadId)->first();
+
+			if (!$task) {
+
+				$task = $this->createTaskAndDetailFromThread($thread);
+
+				$this->onLoad(fn($e) => $e->alert('activity.new-task-created'));
+
+				$this->tagIds = $thread->tags;
+			}
+
+			$this->model($task);
+
+		}
 	}
 
 	public function render()
@@ -84,5 +108,21 @@ class TaskForm extends TaskInfoForm
 	protected function singleColumn()
 	{
 		return $this->contactView();
+	}
+
+	protected function createTaskAndDetailFromThread($thread)
+	{
+		$task = new Task();
+		$task->team_id = currentTeamId();
+		$task->title = $thread->subject;
+		$task->from_thread_id = $thread->id;
+		$task->save();
+
+		$taskDetail = new TaskDetail();
+		$taskDetail->setUserId();
+		$taskDetail->details = '<p><a href="'.$thread->getPreviewRoute().'" target="_blank">'.__('tasks.task-created-from-email').': '.$thread->subject.'</a></p>';
+		$task->taskDetails()->save($taskDetail);
+
+		return $task;
 	}
 }

@@ -5,6 +5,7 @@
 	"tasks.add-task": "Ajouter une tâche",
 	"tasks.assigned-to": "Assignée à",
 	"tasks.completed": "Complétée",
+	"tasks.created-from-email": "Tâche créée à partir du courriel",
 	"tasks.drag-card": "Faites glisser la carte",
 	"tasks.filter": "Filtrer",
 	"tasks.incorrect-link": "Lien incorrect",

@@ -34,7 +34,7 @@ class KompoTasksServiceProvider extends ServiceProvider
 
          //Usage: php artisan vendor:publish --tag="kompo-tasks"
         $this->publishes([
-            __DIR__.'/../config/tasks.php' => config_path('tasks.php'),
+            __DIR__.'/../config/kompo-tasks.php' => config_path('kompo-tasks.php'),
         ], 'kompo-tasks');
     }
 
@@ -47,8 +47,10 @@ class KompoTasksServiceProvider extends ServiceProvider
     {
         $this->loadRoutes();
 
+        $this->loadConfig();
+
         $this->app->bind('task-model', function () {
-            return new (config('tasks.task-model-namespace'));
+            return new (config('kompo-tasks.task-model-namespace'));
         });
 
         $this->app->bind('task-detail-model', function () {
@@ -80,10 +82,7 @@ class KompoTasksServiceProvider extends ServiceProvider
 
         $autoloadedHelpers = collect(\File::allFiles($helpersDir))->map(fn($file) => $file->getRealPath());
 
-        $packageHelpers = [
-        ];
-
-        $autoloadedHelpers->concat($packageHelpers)->each(function ($path) {
+        $autoloadedHelpers->each(function ($path) {
             if (file_exists($path)) {
                 require_once $path;
             }
@@ -95,5 +94,16 @@ class KompoTasksServiceProvider extends ServiceProvider
         $this->booted(function () {
             \Route::middleware('web')->group(__DIR__.'/../routes/web.php');
         });
+    }
+
+    protected function loadConfig()
+    {
+        $dirs = [
+            'kompo-tasks' => __DIR__.'/../config/kompo-tasks.php',            
+        ];
+
+        foreach ($dirs as $key => $path) {
+            $this->mergeConfigFrom($path, $key);
+        }
     }
 }
