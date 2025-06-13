@@ -6,4 +6,5 @@ interface Taskable
 {
     public function getSubmenu();
     public function getName();
+    public function getInfoElements();
 }

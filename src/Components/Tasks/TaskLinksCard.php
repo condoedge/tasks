@@ -40,7 +40,10 @@ class TaskLinksCard extends Query
                 _Html($name ?? 'tasks.incorrect-link')
             ),
             _FlexEnd(
-                _Delete($taskLink)->class('text-gray-300 mr-2'),
+                _Flex(
+                    $taskable->getInfoElements(),
+                )->class('gap-2'),
+                _Delete($taskLink)->class('text-gray-500 mr-2 hover:text-red-700'),
                 !$submenu ? null : _TripleDotsDropdown($submenu),
             )
 
