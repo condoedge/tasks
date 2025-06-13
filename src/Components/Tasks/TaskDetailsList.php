@@ -53,7 +53,6 @@ class TaskDetailsList extends Query
                 _Html($td->created_at->format('d M Y H:i'))
             )->class('text-xs text-level1'),
 
-
             _FlexBetween(
                 _Html($td->user?->name.' '.__('tasks.modified-action'))->class('text-xs text-level1 opacity-60 mb-2'),
                 _FlexEnd(
@@ -72,7 +71,7 @@ class TaskDetailsList extends Query
                     $allFiles->map(function($file){
                         return _Link($file->name)->class('mt-1 -mr-2')->col('col-md-3')
                             ->icon('arrow-down')
-                            ->href($file->link)
+                            ->href('files.download', ['id' => $file->id, 'type' => $file->getMorphClass()])
                             ->attr(['download' => $file->name]);
                     })
                 )->class('mt-4 gap-4'),
