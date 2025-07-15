@@ -18,10 +18,7 @@ abstract class TaskInfoForm extends Form
 
 	protected $assignedCol = 'col-md-7';
 
-	public function created()
-	{
-		$this->model(TaskModel::getClass());
-	}
+	public $model = TaskModel::class;
 
 	public function beforeSave()
 	{

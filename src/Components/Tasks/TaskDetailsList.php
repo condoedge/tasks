@@ -3,8 +3,8 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Condoedge\Utils\Kompo\Common\Query;
+use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Facades\TaskModel;
-use Kompo\Tasks\Models\TaskDetail;
 
 class TaskDetailsList extends Query
 {
@@ -23,7 +23,7 @@ class TaskDetailsList extends Query
 
     public function query()
     {
-        return TaskDetail::with('user', 'files')
+        return TaskDetailModel::with('user', 'files')
             ->where('task_id', $this->taskId)->orderBy('created_at', 'DESC');
     }
 
@@ -45,7 +45,7 @@ class TaskDetailsList extends Query
 
     public function render($td)
     {
-        $allFiles = $td->files;
+        $allFiles = $td->getRelatedFiles();
 
     	return _Rows(
             _FlexBetween(
@@ -68,13 +68,8 @@ class TaskDetailsList extends Query
             !$allFiles->count() ? null :
 
                 _Flex(
-                    $allFiles->map(function($file){
-                        return _Link($file->name)->class('mt-1 -mr-2')->col('col-md-3')
-                            ->icon('arrow-down')
-                            ->href('files.download', ['id' => $file->id, 'type' => $file->getMorphClass()])
-                            ->attr(['download' => $file->name]);
-                    })
-                )->class('mt-4 gap-4'),
+                    $allFiles->map(fn($file) => $file->fileThumbnail())
+                )->class('flex-wrap mt-2'),
 
             !$td->reminder_at ? null :
 
@@ -125,12 +120,12 @@ class TaskDetailsList extends Query
 
     public function completeTaskDetail($id)
     {
-        return TaskDetail::findOrFail($id)->complete();
+        return TaskDetailModel::findOrFail($id)->complete();
     }
 
     public function resetTaskDetail($id)
     {
-        return TaskDetail::findOrFail($id)->reset();
+        return TaskDetailModel::findOrFail($id)->reset();
     }
 
 }

@@ -2,16 +2,16 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
+use Condoedge\Utils\Facades\FileModel;
 use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Tasks\Components\General\CKEditorExtended;
+use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Facades\TaskModel;
-use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Models\TaskLink;
-use Condoedge\Utils\Facades\FileModel;
 
 class TaskDetailForm extends Form
 {
-	public $model = TaskDetail::class;
+	public $model = TaskDetailModel::class;
 
 	public $style = 'min-width:300px';
     public $class = 'bg-level4 rounded-2xl mx-2 px-6 py-4';
@@ -53,14 +53,16 @@ class TaskDetailForm extends Form
 
 	public function render()
 	{
-		[$attachmentsLink, $attachmentsBox] = FileModel::fileUploadLinkAndBox('files', is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle
-		// , $this->model->filesFromRelations()->pluck('id')
+		[$attachmentsLink, $attachmentsBox] = FileModel::fileUploadLinkAndBox(
+			'files', 
+			is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle, 
+			$this->model->getPureRelatedFiles()->pluck('id')
 		);
 
 		return [
-			_CKEditorExtended('')->name('details')->class('ckNoToolbar'),
+			_CKEditorExtended()->name('details')->class('ckNoToolbar'),
 			$attachmentsBox,
-	        !auth()->user()->can('create', TaskDetail::class) ? null : _FlexEnd2(
+	        !auth()->user()->can('create', TaskDetailModel::getClass()) ? null : _FlexEnd2(
                 _Flex2 (
 					$attachmentsLink,
 					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :
@@ -114,7 +116,7 @@ class TaskDetailForm extends Form
 
 				}elseif(count($mention) == 2){
 
-					$td = TaskDetail::find($this->model->id);
+					$td = TaskDetailModel::find($this->model->id);
 					if(!$td->reminder_at || ($mention[1] < $td->reminder_at)){
 						$td->reminder_at = $mention[1];
 						$td->save();

@@ -2,16 +2,14 @@
 
 namespace Kompo\Tasks\Facades;
 
-use Illuminate\Support\Facades\Facade;
+use Kompo\Komponents\Form\KompoModelFacade;
 
 /**
  * @mixin \Kompo\Tasks\Models\Task
  */
-class TaskModel extends Facade
+class TaskModel extends KompoModelFacade
 {
-    use \Condoedge\Utils\Facades\FacadeUtils;
-
-    protected static function getFacadeAccessor()
+    protected static function getModelBindKey()
     {
         return 'task-model';
     }

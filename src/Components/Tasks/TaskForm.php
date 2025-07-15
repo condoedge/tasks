@@ -2,8 +2,8 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Tasks\Models\Task;
-use Kompo\Tasks\Models\TaskDetail;
+use Kompo\Tasks\Facades\TaskDetailModel;
+use Kompo\Tasks\Facades\TaskModel;
 
 class TaskForm extends TaskInfoForm
 {
@@ -16,9 +16,7 @@ class TaskForm extends TaskInfoForm
 	public $class = 'bg-white rounded-l-2xl';
 
 	public function created()
-	{
-		parent::created();
-		
+	{		
         $this->id('task-adding-view');
 
 		$this->style = 
@@ -43,7 +41,7 @@ class TaskForm extends TaskInfoForm
 
 			$thread = \Condoedge\Messaging\Models\CustomInbox\Thread::findOrFail($this->threadId);
 
-			$task = Task::where('from_thread_id', $this->threadId)->first();
+			$task = TaskModel::where('from_thread_id', $this->threadId)->first();
 
 			if (!$task) {
 
@@ -118,7 +116,7 @@ class TaskForm extends TaskInfoForm
 		$task->from_thread_id = $thread->id;
 		$task->save();
 
-		$taskDetail = new TaskDetail();
+		$taskDetail = new TaskDetailModel();
 		$taskDetail->setUserId();
 		$taskDetail->details = '<p><a href="'.$thread->getPreviewRoute().'" target="_blank">'.__('tasks.task-created-from-email').': '.$thread->subject.'</a></p>';
 		$task->taskDetails()->save($taskDetail);

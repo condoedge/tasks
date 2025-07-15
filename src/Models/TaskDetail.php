@@ -2,15 +2,15 @@
 
 namespace Kompo\Tasks\Models;
 
-use Condoedge\Utils\Models\Files\MorphManyFilesTrait;
+use Condoedge\Utils\Facades\FileModel;
 use Condoedge\Utils\Models\Model;
-use Kompo\Auth\Models\Traits\BelongsToUserTrait;
 use Kompo\Tasks\Facades\TaskModel;
 
 class TaskDetail extends Model
 {
-    use BelongsToUserTrait,
-        MorphManyFilesTrait;
+    use \Condoedge\Utils\Models\Traits\BelongsToUserTrait;
+    use \Condoedge\Utils\Models\Files\MorphManyFilesTrait;
+    use \Condoedge\Utils\Models\Files\MorphManyFileablesTrait;
 
     protected $casts = [
         'reminder_at' => 'datetime'
@@ -83,6 +83,7 @@ class TaskDetail extends Model
 
     public function delete()
     {
+        $this->deleteFileables();
         $this->deleteFiles();
 
         parent::delete();
@@ -90,13 +91,13 @@ class TaskDetail extends Model
 
     public function addLinkedFiles($linkedFileIds = [])
     {
-        // TODO
-        // collect($linkedFileIds)->each(function($fileId){
-        //     $file = File::find($fileId);
-        //     if (!$this->filesFromRelations()->pluck('id')->contains($file->id)) {
-        //         $file->linkToOrAssociate($this->id, 'task-detail');
-        //     }
-        // });
+        collect($linkedFileIds)->each(function($fileId){
+            $file = FileModel::find($fileId);
+
+            if (!$this->fileables()->pluck('file_id')->contains($file->id)) {
+                $this->associateFile($file);
+            }
+        });
 
         $this->load('files');
     }
