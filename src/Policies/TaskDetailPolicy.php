@@ -30,7 +30,11 @@ class TaskDetailPolicy
      */
     public function view(User $user, TaskDetail $taskDetail)
     {
-        //
+    }
+
+    public function viewFileOf(User $user, TaskDetail $taskDetail)
+    {
+        return in_array($user->id, [$taskDetail->added_by, $taskDetail->modified_by, $taskDetail->user_id]);
     }
 
     /**

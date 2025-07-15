@@ -92,9 +92,9 @@ class TaskDetailForm extends Form
 
 	public function rules()
 	{
-		return [
-			'details' => 'required'
-		];
+		return array_merge([
+			'details' => 'required',
+		], FileModel::attachmentsRules('files'));
 	}
 
 	protected function processTaskDetails()

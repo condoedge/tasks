@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        return $task->team_id == $user->id;
+        return in_array($task->team_id, $user->getAllAccessibleTeamIds());
     }
 
     /**
