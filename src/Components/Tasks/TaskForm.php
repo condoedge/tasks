@@ -3,7 +3,8 @@
 namespace Kompo\Tasks\Components\Tasks;
 
 use Kompo\Tasks\Facades\TaskDetailModel;
-use Kompo\Tasks\Facades\TaskModel;
+use App\Models\Tasks\Task;
+use App\Models\Tasks\TaskDetail;
 
 class TaskForm extends TaskInfoForm
 {
@@ -41,7 +42,7 @@ class TaskForm extends TaskInfoForm
 
 			$thread = \Condoedge\Messaging\Models\CustomInbox\Thread::findOrFail($this->threadId);
 
-			$task = TaskModel::where('from_thread_id', $this->threadId)->first();
+			$task = Task::where('from_thread_id', $this->threadId)->first();
 
 			if (!$task) {
 
@@ -116,8 +117,8 @@ class TaskForm extends TaskInfoForm
 		$task->from_thread_id = $thread->id;
 		$task->save();
 
-		$taskDetail = new TaskDetailModel();
-		$taskDetail->setUserId();
+		$taskDetail = new TaskDetail();
+		$taskDetail->user_id = auth()->id();
 		$taskDetail->details = '<p><a href="'.$thread->getPreviewRoute().'" target="_blank">'.__('tasks.task-created-from-email').': '.$thread->subject.'</a></p>';
 		$task->taskDetails()->save($taskDetail);
 
