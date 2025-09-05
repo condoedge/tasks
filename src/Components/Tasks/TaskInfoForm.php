@@ -30,6 +30,9 @@ abstract class TaskInfoForm extends Form
 
 	public function taskInfoElements()
 	{
+		$multipleAssignations = collect($this->model->getAllUserAssignations());
+		$hasMultipleAssignations = $multipleAssignations->count() > 1 && !$this->model->assigned_to;
+
 		return _Rows(
 	        _Rows(
 				_MiniTitle('tasks.task')->class('mt-4'),
@@ -43,6 +46,29 @@ abstract class TaskInfoForm extends Form
 				),
 			)->class('card-gray-100 px-6 mx-4 !space-y-2 pb-5'),
 
+			!$hasMultipleAssignations ? null : _CardGray100(
+				_Html('translate.this-task-has-some-multiple-premade-assignations'),
+
+				!$multipleAssignations->where('id', auth()->id())->first() ? null : _Rows(
+					_Html('translate.you-want-to-take-this-assignation?')->class('mb-6'),
+
+					_FlexBetween(
+						_ButtonOutlined('translate.assign-to-another')->run('() => {
+							$("#assign-to-select").val(null).trigger("change");
+							$("#assign-to-select").focus();
+						}')->class('flex-1'),
+						_Button('translate.take-it')->class('flex-1')
+							->selfPost('assignItToMyself')->refresh()
+							->panelLoading('task-info-elements'),
+					)->class('gap-4'),
+				),
+				// _Rows(
+				// 	_Html($multipleAssignations->map(function ($assignation) {
+				// 		return $assignation->display;
+				// 	})->implode(', ')),
+				// ),
+			)->class('card-gray-100 p-4 mx-10 !space-y-2 mb-5'),
+
 	        _Rows(
 				_MiniTitle('tasks.assigned-to')->class('mt-4'),
 				$this->submitsRefresh(
@@ -53,10 +79,12 @@ abstract class TaskInfoForm extends Form
 				$this->submitsRefresh(
 					_Select()->placeholder('tasks.task-lead')->name('assigned_to')
 						->options(
-							currentTeam()->assignToOptions(),
+							!$hasMultipleAssignations ? currentTeam()->assignToOptions() 
+								: $multipleAssignations->pluck('display', 'id')->toArray(),
 						)
 						->icon(_Sax('profile'))
-						->default(auth()->user()->id)
+						->id('assign-to-select')
+						->default($hasMultipleAssignations ? null : auth()->user()->id)
 				),
 				$this->submitsRefresh(
 					_TagsMultiSelect()
@@ -69,7 +97,7 @@ abstract class TaskInfoForm extends Form
 
 
 	        $this->taskLinksCard()
-		);
+		)->id('task-info-elements');
 	}
 
 	protected function panelWrapper($title, $icon, $col1, $col2 = null)
@@ -96,6 +124,12 @@ abstract class TaskInfoForm extends Form
 				->noGutters()
 			)->class('h-full')
 		)->class('overflow-auto mini-scroll h-screen');
+	}
+
+	public function assignItToMyself()
+	{
+		$this->model->assigned_to = auth()->id();
+		$this->model->save();
 	}
 
 	public function searchTeamChildren()

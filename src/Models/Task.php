@@ -49,7 +49,17 @@ class Task extends Model
         return $this->hasMany(TaskLink::class);
     }
 
+    public function taskAssignations(): HasMany
+    {
+        return $this->hasMany(TaskAssignation::class);
+    }
+
     /* CALCULATED FIELDS */
+    public function getAllUserAssignations()
+    {
+        return collect($this->taskAssignations->flatMap->getAllRelatedTaskUserAssignables($this->id))->unique('id');
+    }
+    
     public function isClosed()
     {
         return $this->status == TaskStatusEnum::CLOSED;
@@ -92,6 +102,13 @@ class Task extends Model
             ->orWhere(function($q){
                 $q->whereNull('assigned_to')
                     ->where('added_by', auth()->user()->id);
+            })->orWhere(function($q){
+                $q->whereNull('assigned_to')
+                    ->whereHas('taskAssignations', function($assignationQuery){
+                        $assignationQuery->whereHas('assignable', function($assignableQuery){
+                            $assignableQuery->getModel()::getAllTaskRelatedToUserQuery($assignableQuery, auth()->user()->id);
+                        });
+                    });
             });
     }
 
