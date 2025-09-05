@@ -2,8 +2,9 @@
 
 namespace Kompo\Tasks\Components\Tasks;
 
-use Kompo\Tasks\Models\Task;
-use Kompo\Tasks\Models\TaskDetail;
+use Kompo\Tasks\Facades\TaskDetailModel;
+use App\Models\Tasks\Task;
+use App\Models\Tasks\TaskDetail;
 
 class TaskForm extends TaskInfoForm
 {
@@ -16,9 +17,7 @@ class TaskForm extends TaskInfoForm
 	public $class = 'bg-white rounded-l-2xl';
 
 	public function created()
-	{
-		parent::created();
-		
+	{		
         $this->id('task-adding-view');
 
 		$this->style = 
@@ -119,7 +118,7 @@ class TaskForm extends TaskInfoForm
 		$task->save();
 
 		$taskDetail = new TaskDetail();
-		$taskDetail->setUserId();
+		$taskDetail->user_id = auth()->id();
 		$taskDetail->details = '<p><a href="'.$thread->getPreviewRoute().'" target="_blank">'.__('tasks.task-created-from-email').': '.$thread->subject.'</a></p>';
 		$task->taskDetails()->save($taskDetail);
 

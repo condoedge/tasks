@@ -9,9 +9,10 @@ use Condoedge\Utils\Models\Tags\MorphToManyTagsTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kompo\Auth\Models\Teams\BelongsToTeamTrait;
+use Kompo\Database\HasTranslations;
+use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
-use Kompo\Database\HasTranslations;
 
 class Task extends Model
 {
@@ -31,7 +32,7 @@ class Task extends Model
     
     public function taskDetails(): HasMany
     {
-        return $this->hasMany(TaskDetail::class);
+        return $this->hasMany(TaskDetailModel::getClass());
     }
 
     public function incompleteTaskDetails(): HasMany

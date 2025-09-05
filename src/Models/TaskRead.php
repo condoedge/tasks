@@ -3,15 +3,15 @@
 namespace Kompo\Tasks\Models;
 
 use Condoedge\Utils\Models\ModelBase;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kompo\Auth\Models\Traits\BelongsToUserTrait;
+use Kompo\Tasks\Facades\TaskDetailModel;
 
 class TaskRead extends ModelBase
 {
 	use BelongsToUserTrait;
 
-    public function taskDetail(): BelongsTo
+    public function taskDetail()
     {
-        return $this->belongsTo(TaskDetail::class);
+        return $this->belongsTo(TaskDetailModel::getClass());
     }
 }

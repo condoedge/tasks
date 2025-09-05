@@ -4,8 +4,8 @@ namespace Kompo\Tasks;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Facades\TaskModel;
-use Kompo\Tasks\Models\TaskDetail;
 use Kompo\Tasks\Policies\TaskDetailPolicy;
 use Kompo\Tasks\Policies\TaskPolicy;
 
@@ -54,12 +54,12 @@ class KompoTasksServiceProvider extends ServiceProvider
         });
 
         $this->app->bind('task-detail-model', function () {
-            return new (config('tasks.task-detail-model-namespace'));
+            return new (config('kompo-tasks.task-detail-model-namespace'));
         });
 
         Relation::morphMap([
             'user' => \App\Models\User::class,
-            'taskDetail' => TaskDetail::class,
+            'taskDetail' => TaskDetailModel::getClass(),
             'task' => TaskModel::getClass(),
         ]);
     }
@@ -67,7 +67,7 @@ class KompoTasksServiceProvider extends ServiceProvider
     protected function registerPolicies()
     {
         $policies = [
-            TaskDetail::class => TaskDetailPolicy::class,
+            TaskDetailModel::getClass() => TaskDetailPolicy::class,
             TaskModel::getClass() => TaskPolicy::class,
         ];
 
