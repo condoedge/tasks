@@ -197,7 +197,10 @@ abstract class TaskInfoForm extends Form
 		return [
 			'title' => 'required|max:255',
 			'status' => 'required',
-			'team_id' => 'required',
+			'team_id' => 'required|exists:teams,id',
+			'visibility' => 'required|in:' . collect(TaskVisibilityEnum::cases())->pluck('value')->join(','),
+			'assigned_to' => 'required|exists:users,id',
+			'urgent' => 'boolean',
 		];
 	}
 }
