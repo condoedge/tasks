@@ -3,6 +3,7 @@
 	"tasks.add-action-first": "Sauvegardez la tâche pour accéder à son détail",
 	"tasks.add-and-close-task": "Ajouter et fermer la tâche",
 	"tasks.add-task": "Ajouter une tâche",
+	"tasks.assign-to-another": "Attribuer à un collègue",
 	"tasks.assigned-to": "Assignée à",
 	"tasks.completed": "Complétée",
 	"tasks.created-from-email": "Tâche créée à partir du courriel",
@@ -23,15 +24,18 @@
 	"tasks.statuses.pending": "En attente",
 	"tasks.statuses.processing": "En cours",
 	"tasks.tags": "Étiquettes",
+	"tasks.take-it": "Je la prends",
 	"tasks.task": "Tâche",
 	"tasks.task-lead": "Tâche confiée à...",
 	"tasks.tasks": "Tâches",
 	"tasks.team-assigment": "Équipe",
 	"tasks.text-here-will-be-the-note-details": "Les détails de la tâche apparaîtront ici",
+	"tasks.this-task-has-some-multiple-premade-assignations": "Cette tâche est assignée à plusieurs personnes",
 	"tasks.title": "Titre",
 	"tasks.user": "Membre de mon équipe",
 	"tasks.visibilities.all": "Tous",
 	"tasks.visibilities.board": "Membres adultes",
 	"tasks.visibilities.managers": "Gestionnaires",
-	"tasks.with-closed-tasks": "Afficher les tâches terminées"
+	"tasks.with-closed-tasks": "Afficher les tâches terminées",
+	"tasks.you-want-to-take-this-assignation?": "Que voulez-vous faire ?"
 }

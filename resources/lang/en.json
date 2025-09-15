@@ -3,6 +3,7 @@
 	"tasks.add-action-first": "Save task to access its details",
 	"tasks.add-and-close-task": "Add and close task",
 	"tasks.add-task": "Add task",
+	"tasks.assign-to-another": "Assign to colleague",
 	"tasks.assigned-to": "Assigned to",
 	"tasks.completed": "Completed",
 	"tasks.created-from-email": "Task created from email",
@@ -23,15 +24,18 @@
 	"tasks.statuses.pending": "Pending",
 	"tasks.statuses.processing": "Processing",
 	"tasks.tags": "Tags",
+	"tasks.take-it": "Take it",
 	"tasks.task": "Task",
 	"tasks.task-lead": "Task assigned to ...",
 	"tasks.tasks": "Tasks",
 	"tasks.team-assigment": "Team",
 	"tasks.text-here-will-be-the-note-details": "Task details will appear here",
+	"tasks.this-task-has-some-multiple-premade-assignations": "This task has multiple persons assigned",
 	"tasks.title": "Title",
 	"tasks.user": "Team member",
 	"tasks.visibilities.all": "All",
 	"tasks.visibilities.board": "Vonlunteers",
 	"tasks.visibilities.managers": "Managers",
-	"tasks.with-closed-tasks": "Display closed tasks"
+	"tasks.with-closed-tasks": "Display closed tasks",
+	"tasks.you-want-to-take-this-assignation?": "What do you want to do ?"
 }
