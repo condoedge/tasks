@@ -44,17 +44,17 @@ abstract class TaskInfoForm extends Form
 			)->class('card-gray-100 px-6 mx-4 !space-y-2 pb-5'),
 
 			!$hasMultipleAssignations ? null : _CardGray100(
-				_Html('translate.this-task-has-some-multiple-premade-assignations'),
+				_Html('tasks.this-task-has-some-multiple-premade-assignations'),
 
 				!$multipleAssignations->where('id', auth()->id())->first() ? null : _Rows(
-					_Html('translate.you-want-to-take-this-assignation?')->class('mb-6'),
+					_Html('tasks.you-want-to-take-this-assignation?')->class('mb-6'),
 
 					_FlexBetween(
-						_ButtonOutlined('translate.assign-to-another')->run('() => {
+						_ButtonOutlined('tasks.assign-to-another')->run('() => {
 							$("#assign-to-select").val(null).trigger("change");
 							$("#assign-to-select").focus();
 						}')->class('flex-1'),
-						_Button('translate.take-it')->class('flex-1')
+						_Button('tasks.take-it')->class('flex-1')
 							->selfPost('assignItToMyself')->refresh()
 							->panelLoading('task-info-elements'),
 					)->class('gap-4'),
