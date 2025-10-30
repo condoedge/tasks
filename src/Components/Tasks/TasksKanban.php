@@ -52,7 +52,7 @@ class TasksKanban extends TasksMainView
 		$task = TaskModel::findOrFail(request('id'));
 
 		if(!auth()->user()->can('update', $task))
-			return;
+			abort(403, __('kompo.unauthorized-action'));
 
 		return $task->handleStatusChange(request('status'));
 	}
