@@ -188,6 +188,7 @@ class Task extends Model
         $taskNotified = $this->unread_notifications_count ?: null;
 
         return _Rows(
+            $this->urgent ? _Pill('tasks.priority')->class('bg-warning text-white absolute -top-2 left-1') : null,
             _FlexBetween(
                 !$minReminderDate ? null :
                     _Html(
@@ -207,11 +208,12 @@ class Task extends Model
                 _FlexEnd(
                     _ChatCount($this->task_details_count)
                         ->class('flex items-center mr-2'),
-                    $this->taskDropdown(),
+                    // $this->taskDropdown(),
                 )->class('text-gray-600 text-xs mt-2'),
             )->class('mt-2')
-        )->class('p-4 cursor-pointer')
-        ->class($taskRead ? 'task-read' : '');
+        )->class('p-4 cursor-pointer relative')
+        ->class($taskRead ? 'task-read' : '')
+        ->class($this->urgent ? 'border-2 border-warning mt-[0.85rem]' : '');
     }
 
     public function taskDropdown()

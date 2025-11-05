@@ -102,7 +102,7 @@ abstract class TaskInfoForm extends Form
 		return _Rows(
 			_Columns(
 				_FlexBetween(
-					_PageTitle($title)
+					_PageTitle('tasks.task')
 						->icon(
 							_Svg($icon)->class('text-5xl')
 						),
@@ -138,7 +138,8 @@ abstract class TaskInfoForm extends Form
 
 	protected function titleInput()
 	{
-		return _Translatable()->placeholder('tasks.title')->name('title');
+		return _Translatable()->placeholder('tasks.title')->name('title')
+			->class('[&>.vlInputWrapper>.vlLocales]:hidden'); // Hide locales selector for now
 	}
 
 	protected function statusInput()
@@ -159,7 +160,7 @@ abstract class TaskInfoForm extends Form
                 ->default(TaskVisibilityEnum::ALL)
 			),
 
-			$this->model->id ? $this->submitsRefresh(_Checkbox('tasks.priority')->name('urgent')) : null,
+			$this->model->id ? $this->submitsRefresh(_Checkbox('tasks.priority')->class('[&>label>.icon-spinner]:hidden')->name('urgent')) : null,
 		);
 	}
 
