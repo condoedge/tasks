@@ -138,11 +138,13 @@ class Task extends Model
         return $query->where('status', TaskStatusEnum::CLOSED);
     }
 
-    public function scopeWithClosedLogic($query, $closedSinceDays = 2)
+    public function scopeWithClosedLogic($query, $closedSinceDays = null)
     {
+        $closedSinceDays = $closedSinceDays ?? request('closed_since') ?? null;
+
         return $query->where(fn($q) => $q->notClosed()
             ->orWhere(fn($q) => $q->closed()
-                    ->where('closed_at', '>=', Carbon::now()->addDays(-(request('closed_since') ?: $closedSinceDays)))
+                    ->where('closed_at', '>=', Carbon::now()->subDays($closedSinceDays))
             )
         );
     }
