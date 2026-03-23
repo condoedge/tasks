@@ -70,7 +70,7 @@ abstract class TaskInfoForm extends Form
 				_MiniTitle('tasks.assigned-to')->class('mt-4'),
 				$this->submitsRefresh(
 					_Select()->placeholder('tasks.team-assigment')->name('team_id')
-						->searchOptions(0, 'searchTeamChildren')
+						->searchOptions(0, 'searchTeamChildren', 'retrieveTeamChildren')
 						->default(currentTeamId())
 				),
 				$this->submitsRefresh(
@@ -134,6 +134,15 @@ abstract class TaskInfoForm extends Form
 		return TeamModel::parseOptions(
 			TeamModel::active()->validForTasks()->whereIn('id', currentTeam()->getAllChildrenRawSolution())->get()
 		);
+	}
+
+    public function retrieveTeamChildren($id)
+    {
+        $team = TeamModel::findOrFail($id);
+
+        return TeamModel::parseOptions(
+			collect([$team])
+		)->toArray();
 	}
 
 	protected function titleInput()
