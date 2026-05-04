@@ -4,7 +4,8 @@
       "Bash(php -l src/Components/Tasks/TaskInfoForm.php)",
       "Bash(php -l src/Components/Tasks/Concerns/HandlesTaskAssignables.php)",
       "Bash(php -l src/Models/TaskAssignableRegistry.php)",
-      "Bash(php -l src/Models/Task.php)"
+      "Bash(php -l src/Models/Task.php)",
+      "Bash(python3 -c \"import json; json.load\\(open\\('resources/lang/en.json'\\)\\); json.load\\(open\\('resources/lang/fr.json'\\)\\); print\\('json ok'\\)\")"
     ]
   }
 }
