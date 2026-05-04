@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l src/Components/Tasks/TaskInfoForm.php)",
+      "Bash(php -l src/Components/Tasks/Concerns/HandlesTaskAssignables.php)",
+      "Bash(php -l src/Models/TaskAssignableRegistry.php)",
+      "Bash(php -l src/Models/Task.php)"
+    ]
+  }
+}

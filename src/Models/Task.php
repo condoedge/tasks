@@ -14,6 +14,7 @@ use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
 use Kompo\Tasks\Models\Contracts\TaskAssignable;
+use Kompo\Tasks\Models\TaskAssignableRegistry;
 
 class Task extends Model
 {
@@ -67,6 +68,22 @@ class Task extends Model
         return $this->status == TaskStatusEnum::CLOSED;
     }
 
+    public function canBeTakenBy(?int $userId): bool
+    {
+        if (!$userId || !$this->id || $this->assigned_to) {
+            return false;
+        }
+
+        $hasNonUserAssignation = $this->taskAssignations
+            ->contains(fn ($a) => !TaskAssignableRegistry::isUserClass(TaskAssignableRegistry::classFromAssignation($a)));
+
+        if (!$hasNonUserAssignation) {
+            return false;
+        }
+
+        return collect($this->getAllUserAssignations())->where('id', $userId)->isNotEmpty();
+    }
+
     public function progressPct()
     {
         if($this->isClosed())
@@ -81,6 +98,38 @@ class Task extends Model
     }
 
     /* ACTIONS */
+    public function applyAssignment(string $class, \Illuminate\Support\Collection $ids): void
+    {
+        $isUser = TaskAssignableRegistry::isUserClass($class);
+
+        $this->assigned_to = $isUser && $ids->count() === 1 ? $ids->first() : null;
+
+        if (!$this->id) {
+            return;
+        }
+
+        $this->taskAssignations()->delete();
+        $this->unsetRelation('taskAssignations');
+
+        if ($isUser && $ids->count() === 1) {
+            return;
+        }
+
+        $keyName = TaskAssignableRegistry::keyNameFor($class);
+        $models = $class::query()->whereIn($keyName, $ids->all())->get()->all();
+
+        TaskAssignation::createForMany($this->id, $models);
+        $this->unsetRelation('taskAssignations');
+    }
+
+    public function takeOwnership(int $userId): void
+    {
+        $this->assigned_to = $userId;
+        $this->save();
+        $this->taskAssignations()->delete();
+        $this->unsetRelation('taskAssignations');
+    }
+
     public function close()
     {
         $this->status = TaskStatusEnum::CLOSED;
@@ -141,13 +190,7 @@ class Task extends Model
 
     protected static function taskAssignableClasses()
     {
-        $assignables = config('kompo-tasks.assignables') ?: [User::class];
-
-        return collect($assignables)
-            ->map(fn ($config) => is_string($config) ? $config : ($config['model'] ?? $config['class'] ?? null))
-            ->filter(fn ($class) => $class && class_exists($class) && is_subclass_of($class, TaskAssignable::class))
-            ->unique()
-            ->values();
+        return TaskAssignableRegistry::classes();
     }
 
     public function scopeOpen($query)
@@ -209,7 +252,7 @@ class Task extends Model
     /* QUERIES */
     public static function baseQuery()
     {
-        return static::with('assignedTo', 'taskDetails.read')
+        return static::with('assignedTo', 'taskDetails.read', 'taskAssignations')
             ->withCount('taskDetails')
             // ->withCount('unreadNotifications')
             ->withReminderInfo()
@@ -221,13 +264,16 @@ class Task extends Model
     public function taskCard()
     {
         $minReminderDate = $this->incomplete_task_details_min_reminder_at;
-        
+
         $taskRead = $this->task_details_count === $this->taskDetails->filter(fn($td) => $td->read)->count();
 
         $taskNotified = $this->unread_notifications_count ?: null;
 
+        $canBeTaken = $this->canBeTakenBy(auth()->id());
+
         return _Rows(
             $this->urgent ? _Pill('tasks.priority')->class('bg-warning text-white absolute -top-2 left-1') : null,
+            $canBeTaken ? _Pill('tasks.to-take')->class('bg-info text-white absolute -top-2 right-1') : null,
             _FlexBetween(
                 !$minReminderDate ? null :
                     _Html(
@@ -252,7 +298,7 @@ class Task extends Model
             )->class('mt-2')
         )->class('p-4 cursor-pointer relative')
         ->class($taskRead ? 'task-read' : '')
-        ->class($this->urgent ? 'border-2 border-warning mt-[0.85rem]' : '');
+        ->class($this->urgent ? 'border-2 border-warning mt-[0.85rem]' : ($canBeTaken ? 'mt-[0.85rem]' : ''));
     }
 
     public function taskDropdown()
