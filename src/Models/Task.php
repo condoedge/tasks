@@ -13,6 +13,7 @@ use Kompo\Database\HasTranslations;
 use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
+use Kompo\Tasks\Models\Contracts\TaskAssignable;
 
 class Task extends Model
 {
@@ -99,18 +100,54 @@ class Task extends Model
     /* SCOPES */
     public function scopeMine($query)
     {
-        return $query->where('assigned_to', auth()->user()->id)
-            ->orWhere(function($q){
-                $q->whereNull('assigned_to')
-                    ->where('added_by', auth()->user()->id);
-            })->orWhere(function($q){
-                $q->whereNull('assigned_to')
-                    ->whereHas('taskAssignations', function($assignationQuery){
-                        $assignationQuery->whereHas('assignable', function($assignableQuery){
-                            $assignableQuery->getModel()::getAllTaskRelatedToUserQuery($assignableQuery, auth()->user()->id);
+        $userId = auth()->id();
+
+        return $query->where(function ($query) use ($userId) {
+            $query->where('assigned_to', $userId)
+                ->orWhere(function ($q) use ($userId) {
+                    $q->whereNull('assigned_to')
+                        ->where('added_by', $userId);
+                })->orWhere(function ($q) use ($userId) {
+                    $q->whereNull('assigned_to')
+                        ->whereHas('taskAssignations', function ($assignationQuery) use ($userId) {
+                            static::scopeAssignationsRelatedToUser($assignationQuery, $userId);
                         });
-                    });
+                });
+        });
+    }
+
+    protected static function scopeAssignationsRelatedToUser($query, $userId)
+    {
+        $classes = static::taskAssignableClasses();
+
+        if ($classes->isEmpty()) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->where(function ($query) use ($classes, $userId) {
+            $classes->each(function ($class) use ($query, $userId) {
+                $model = new $class();
+                $relatedQuery = $class::query();
+                $relatedQuery = $class::getAllTaskRelatedToUserQuery($relatedQuery, $userId) ?: $relatedQuery;
+                $taskKeyName = TaskAssignation::taskAssignableKeyName($model);
+
+                $query->orWhere(function ($query) use ($model, $relatedQuery, $taskKeyName) {
+                    $query->where('assignable_type', $model->getMorphClass())
+                        ->whereIn('assignable_id', $relatedQuery->select($model->qualifyColumn($taskKeyName)));
+                });
             });
+        });
+    }
+
+    protected static function taskAssignableClasses()
+    {
+        $assignables = config('kompo-tasks.assignables') ?: [User::class];
+
+        return collect($assignables)
+            ->map(fn ($config) => is_string($config) ? $config : ($config['model'] ?? $config['class'] ?? null))
+            ->filter(fn ($class) => $class && class_exists($class) && is_subclass_of($class, TaskAssignable::class))
+            ->unique()
+            ->values();
     }
 
     public function scopeOpen($query)

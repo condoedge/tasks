@@ -2,6 +2,7 @@
 namespace Kompo\Tasks\Models;
 
 use Condoedge\Utils\Models\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class TaskAssignation extends Model
 {
@@ -19,11 +20,44 @@ class TaskAssignation extends Model
 
     public function getAllRelatedTaskUserAssignables()
     {
-        if (method_exists($this->assignable, 'getAllRelatedTaskUserAssignables')) {
-            return $this->assignable->getAllRelatedTaskUserAssignables($this->task_id);
+        $assignable = $this->assignableForTask();
+
+        if (!$assignable) {
+            return [];
         }
 
-        return [$this->assignable];
+        if (method_exists($assignable, 'getAllRelatedTaskUserAssignables')) {
+            return $assignable->getAllRelatedTaskUserAssignables($this->task_id);
+        }
+
+        return [$assignable];
+    }
+
+    // Using assignable it uses the main key by default
+    // IN ROLE THE DEFAULT KEY IS AN STRING SO THAT BRING AN ERROR
+    // That's the reason of this method, to be able to specify the key to use for the assignation
+    public function assignableForTask()
+    {
+        $class = Relation::getMorphedModel($this->assignable_type) ?: $this->assignable_type;
+
+        if (!$class || !class_exists($class)) {
+            return null;
+        }
+
+        $model = new $class();
+
+        return $class::query()
+            ->where(static::taskAssignableKeyName($model), $this->assignable_id)
+            ->first();
+    }
+
+    public static function taskAssignableKeyName($assignable)
+    {
+        if (method_exists($assignable, 'getKeyNameForTask')) {
+            return $assignable->getKeyNameForTask();
+        }
+
+        return $assignable->getKeyName();
     }
 
     // ACTIONS
@@ -33,7 +67,7 @@ class TaskAssignation extends Model
             $taskAssignation = new TaskAssignation();
             $taskAssignation->task_id = $taskId;
             $taskAssignation->assignable_type = $assignable->getMorphClass();
-            $taskAssignation->assignable_id = $assignable->getKey();
+            $taskAssignation->assignable_id = $assignable->getIdForTask();
             $taskAssignation->save();
         }
     }

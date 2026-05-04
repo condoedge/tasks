@@ -8,7 +8,19 @@ return [
     'task-detail-model-namespace' => Kompo\Tasks\Models\TaskDetail::class,
 
     // 'assignables' => [
-    //     UserModel::getClass(),
-    //     RoleModel::getClass(),
+    //     'person' => [
+    //         'model' => UserModel::getClass(),
+    //         'label' => 'tasks.person',
+    //         'placeholder' => 'tasks.pick-a-person',
+    //         'multiple' => true,
+    //         'icon' => 'profile',
+    //     ],
+    //     'position' => [
+    //         'model' => RoleModel::getClass(),
+    //         'label' => 'tasks.position',
+    //         'placeholder' => 'tasks.pick-a-position',
+    //         'multiple' => false,
+    //         'icon' => 'briefcase',
+    //     ],
     // ]
 ];
