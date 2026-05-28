@@ -15,9 +15,11 @@ use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
 use Kompo\Tasks\Models\Contracts\TaskAssignable;
 use Kompo\Tasks\Models\TaskAssignableRegistry;
+use Kompo\Auth\Contracts\Security\ScopedToTeam;
 
-class Task extends Model
+class Task extends Model implements ScopedToTeam
 {
+    use \Kompo\Auth\Models\Concerns\Security\BelongsToOneTeam;
     use BelongsToTeamTrait, MorphToManyTagsTrait, HasTranslations;
 
     protected $casts = [
