@@ -5,6 +5,7 @@ namespace Kompo\Tasks\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Kompo\Tasks\Models\Task;
+use Kompo\Auth\Models\Teams\PermissionTypeEnum;
 
 class TaskPolicy
 {
@@ -41,7 +42,7 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('tasks:create');
+        return $user->hasPermission('Task', PermissionTypeEnum::WRITE);
     }
 
     /**
@@ -53,9 +54,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return ($task->created_by == $user->id) || 
-            ($user->hasPermission('tasks:updateOfTeam') && $task->team_id == $user->current_team_id) || 
-            $user->hasPermission('tasks:update');
+        return ($task->created_by == $user->id) || $user->hasPermission('UpdateOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     /**
@@ -67,16 +66,13 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return ($task->created_by == $user->id) || 
-            ($user->hasPermission('tasks:deleteOfTeam') && $task->team_id == $user->current_team_id) || 
-            $user->hasPermission('tasks:delete');
+        return ($task->created_by == $user->id) || $user->hasPermission('DeleteOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     public function close(User $user, Task $task)
     {
         return $task->created_by == $user->id || 
-            ($task->assigned_to == $user->id && $user->can('tasks:closeAssigned')) || 
-            ($user->hasPermission('tasks:closeOfTeam') && $task->team_id == $user->current_team_id) || 
-            $user->hasPermission('tasks:close');
+            ($task->assigned_to == $user->id && $user->can('CloseAssignedTask')) || 
+            ($user->hasPermission('CloseOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]));
     }
 }
