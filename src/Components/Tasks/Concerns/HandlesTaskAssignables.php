@@ -33,6 +33,7 @@ trait HandlesTaskAssignables
                     && $e->selfPost('assignItToMyself')
                         ->alert('tasks.task-taken-successfully')
                         ->refresh()
+                        ->refresh('tasks.kanban')
                 ),
         )->class('card-gray-100 p-4 mx-10 !space-y-2 mb-5');
     }
