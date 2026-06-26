@@ -5,12 +5,15 @@ namespace Kompo\Tasks\Components\Tasks;
 use Condoedge\Utils\Facades\FileModel;
 use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Tasks\Components\General\CKEditorExtended;
+use Kompo\Tasks\Components\Tasks\Concerns\ShowsPermissionNotice;
 use Kompo\Tasks\Facades\TaskDetailModel;
 use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\TaskLink;
 
 class TaskDetailForm extends Form
 {
+	use ShowsPermissionNotice;
+
 	public $model = TaskDetailModel::class;
 
 	public $style = 'min-width:300px';
@@ -53,16 +56,24 @@ class TaskDetailForm extends Form
 
 	public function render()
 	{
+		$editor = _CKEditorExtended()->name('details')->class('ckNoToolbar');
+
+		if (!$this->canEdit()) {
+			return [
+				$this->readOnlyPermissionNotice(),
+			];
+		}
+
 		[$attachmentsLink, $attachmentsBox] = FileModel::fileUploadLinkAndBox(
-			'files', 
-			is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle, 
+			'files',
+			is_null($this->fileInitialToggle) ? !$this->model->files()->count() : $this->fileInitialToggle,
 			$this->model->getPureRelatedFiles()->pluck('id')
 		);
 
 		return [
-			_CKEditorExtended()->name('details')->class('ckNoToolbar'),
+			$editor,
 			$attachmentsBox,
-	        !auth()->user()->can('create', [TaskDetailModel::getClass(), $this->task]) ? null : _FlexEnd2(
+	        _FlexEnd2(
                 _Flex2 (
 					$attachmentsLink,
 					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :
@@ -88,6 +99,13 @@ class TaskDetailForm extends Form
 						)->refresh('task-details-list-'.$this->taskId)
 				)->class('flex-wrap'),
 	    ];
+	}
+
+	protected function canEdit()
+	{
+		return $this->model->id
+			? auth()->user()->can('update', $this->model)
+			: auth()->user()->can('create', [TaskDetailModel::getClass(), $this->task]);
 	}
 
 	public function rules()

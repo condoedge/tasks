@@ -164,6 +164,7 @@ trait HandlesTaskAssignables
         }
 
         return $this->model->taskAssignations()
+            ->asSystemOperation()
             ->get()
             ->filter(fn($assignation) => TaskAssignableRegistry::assignationMatchesClass($assignation, $config['model']))
             ->pluck('assignable_id')
@@ -191,10 +192,10 @@ trait HandlesTaskAssignables
         if (method_exists($model, 'scopeValidForTaskAssignment')) {
             $query->validForTaskAssignment($this->selectedTeamId());
         } elseif (method_exists($model, 'teamRoles')) {
-            $query->whereHas('teamRoles', fn($q) => $q->where('team_id', $this->selectedTeamId()));
+            $query->whereHas('teamRoles', fn($q) => $q->where('team_id', $this->selectedTeamId())->asSystemOperation());
         }
 
-        $assignables = $query->take(200)->get();
+        $assignables = $query->asSystemOperation()->take(200)->get();
         $selectedIds = collect($this->selectedAssignableIdsForType($type))
             ->filter(fn($id) => $id !== null && $id !== '')
             ->values();

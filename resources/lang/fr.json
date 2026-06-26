@@ -24,6 +24,7 @@
 	"tasks.position-assigned-task-help": "Toute personne avec cette position peut prendre la tache. La premiere personne qui le fait devient responsable.",
 	"tasks.priority": "Priorité",
 	"tasks.publicly-visible": "Visible publiquement",
+	"tasks.read-only-no-permission": "Lecture seule — vous n'avez pas la permission de modifier ceci.",
 	"tasks.show-my-tasks-only": "Mes tâches uniquement",
 	"tasks.status": "Statut",
 	"tasks.statuses.done": "Terminée",

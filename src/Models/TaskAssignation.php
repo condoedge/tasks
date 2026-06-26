@@ -60,6 +60,35 @@ class TaskAssignation extends Model
         return $assignable->getKeyName();
     }
 
+    // SCOPES
+    /**
+     * Constrains assignations to those that resolve (directly or transitively) to the given user.
+     * Operates on the task_assignations table, so it can be used inside whereHas() or as an
+     * existence check on a task's assignations relation.
+     */
+    public function scopeRelatedToUser($query, $userId)
+    {
+        $classes = TaskAssignableRegistry::classes();
+
+        if ($classes->isEmpty()) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->where(function ($query) use ($classes, $userId) {
+            $classes->each(function ($class) use ($query, $userId) {
+                $model = new $class();
+                $relatedQuery = $class::query();
+                $relatedQuery = $class::getAllTaskRelatedToUserQuery($relatedQuery, $userId) ?: $relatedQuery;
+                $taskKeyName = static::taskAssignableKeyName($model);
+
+                $query->orWhere(function ($query) use ($model, $relatedQuery, $taskKeyName) {
+                    $query->where('assignable_type', $model->getMorphClass())
+                        ->whereIn('assignable_id', $relatedQuery->asSystemOperation()->select($model->qualifyColumn($taskKeyName)));
+                });
+            });
+        })->asSystemOperation();
+    }
+
     // ACTIONS
     public static function createForMany($taskId, $assignables)
     {

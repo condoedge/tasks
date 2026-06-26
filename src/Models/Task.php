@@ -86,6 +86,34 @@ class Task extends Model implements ScopedToTeam
         return collect($this->getAllUserAssignations())->where('id', $userId)->isNotEmpty();
     }
 
+    /**
+     * Whether the task is assigned to the user, directly or transitively through an assignation.
+     * The expensive assignation lookup is cached per (task version, user); the cache is busted
+     * whenever the task's assignment changes via bustAssignmentCache().
+     */
+    public function isRelatedToUser($userId): bool
+    {
+        if ($this->assigned_to == $userId) {
+            return true;
+        }
+
+        $key = "task_{$this->id}_assignment_v{$this->assignmentCacheVersion()}_user_{$userId}";
+
+        return \Cache::remember($key, now()->addMinutes(5), fn () =>
+            $this->taskAssignations()->relatedToUser($userId)->exists()
+        );
+    }
+
+    protected function assignmentCacheVersion(): int
+    {
+        return (int) \Cache::get("task_{$this->id}_assignment_version", 0);
+    }
+
+    public function bustAssignmentCache(): void
+    {
+        \Cache::put("task_{$this->id}_assignment_version", $this->assignmentCacheVersion() + 1, now()->addDay());
+    }
+
     public function progressPct()
     {
         if($this->isClosed())
@@ -112,6 +140,7 @@ class Task extends Model implements ScopedToTeam
 
         $this->taskAssignations()->delete();
         $this->unsetRelation('taskAssignations');
+        $this->bustAssignmentCache();
 
         if ($isUser && $ids->count() === 1) {
             return;
@@ -130,6 +159,7 @@ class Task extends Model implements ScopedToTeam
         $this->save();
         $this->taskAssignations()->delete();
         $this->unsetRelation('taskAssignations');
+        $this->bustAssignmentCache();
     }
 
     public function close()
@@ -160,39 +190,9 @@ class Task extends Model implements ScopedToTeam
                         ->where('added_by', $userId);
                 })->orWhere(function ($q) use ($userId) {
                     $q->whereNull('assigned_to')
-                        ->whereHas('taskAssignations', function ($assignationQuery) use ($userId) {
-                            static::scopeAssignationsRelatedToUser($assignationQuery, $userId);
-                        });
+                        ->whereHas('taskAssignations', fn ($assignationQuery) => $assignationQuery->relatedToUser($userId));
                 });
         });
-    }
-
-    protected static function scopeAssignationsRelatedToUser($query, $userId)
-    {
-        $classes = static::taskAssignableClasses();
-
-        if ($classes->isEmpty()) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->where(function ($query) use ($classes, $userId) {
-            $classes->each(function ($class) use ($query, $userId) {
-                $model = new $class();
-                $relatedQuery = $class::query();
-                $relatedQuery = $class::getAllTaskRelatedToUserQuery($relatedQuery, $userId) ?: $relatedQuery;
-                $taskKeyName = TaskAssignation::taskAssignableKeyName($model);
-
-                $query->orWhere(function ($query) use ($model, $relatedQuery, $taskKeyName) {
-                    $query->where('assignable_type', $model->getMorphClass())
-                        ->whereIn('assignable_id', $relatedQuery->select($model->qualifyColumn($taskKeyName)));
-                });
-            });
-        });
-    }
-
-    protected static function taskAssignableClasses()
-    {
-        return TaskAssignableRegistry::classes();
     }
 
     public function scopeOpen($query)

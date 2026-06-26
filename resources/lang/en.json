@@ -24,6 +24,7 @@
 	"tasks.position-assigned-task-help": "Anyone with this position can take ownership. The first person who does becomes the assignee.",
 	"tasks.priority": "Priority",
 	"tasks.publicly-visible": "Publicly visible",
+	"tasks.read-only-no-permission": "Read-only — you don't have permission to edit this.",
 	"tasks.show-my-tasks-only": "My tasks only",
 	"tasks.status": "Status",
 	"tasks.statuses.done": "Done",

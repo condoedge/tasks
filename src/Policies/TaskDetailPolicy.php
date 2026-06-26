@@ -101,6 +101,6 @@ class TaskDetailPolicy
 
     protected function isTaskAssignedToUser(Task $task, User $user): bool
     {
-        return $task->assigned_to === $user->id || $task->taskAssignations->flatMap(fn($a) => $a->getAllRelatedTaskUserAssignables())->pluck('id')->contains($user->id);
+        return $task->isRelatedToUser($user->id);
     }
 }

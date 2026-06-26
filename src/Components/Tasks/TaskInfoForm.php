@@ -5,6 +5,7 @@ namespace Kompo\Tasks\Components\Tasks;
 use Condoedge\Utils\Kompo\Common\Form;
 use Kompo\Auth\Facades\TeamModel;
 use Kompo\Tasks\Components\Tasks\Concerns\HandlesTaskAssignables;
+use Kompo\Tasks\Components\Tasks\Concerns\ShowsPermissionNotice;
 use Kompo\Tasks\Facades\TaskModel;
 use Kompo\Tasks\Models\Enums\TaskStatusEnum;
 use Kompo\Tasks\Models\Enums\TaskVisibilityEnum;
@@ -13,6 +14,7 @@ use Kompo\Tasks\Models\TaskAssignableRegistry;
 abstract class TaskInfoForm extends Form
 {
 	use HandlesTaskAssignables;
+	use ShowsPermissionNotice;
 
 	protected $subtitle = 'TASK';
 
@@ -20,6 +22,8 @@ abstract class TaskInfoForm extends Form
 	protected $tagIds;
 
 	protected $assignedCol = 'col-md-7';
+
+	protected $canEditTask;
 
 	public $model = TaskModel::class;
 
@@ -40,6 +44,7 @@ abstract class TaskInfoForm extends Form
 	public function taskInfoElements()
 	{
 		return _Rows(
+			$this->canEditTask() ? null : $this->readOnlyPermissionNotice()->class('mx-4 mt-4'),
 			_Rows(
 				_Rows(
 					_MiniTitle('tasks.task')->class('mt-4'),
@@ -167,7 +172,18 @@ abstract class TaskInfoForm extends Form
 
 	protected function submitsRefresh($komponent)
 	{
+		if (!$this->canEditTask()) {
+			return $komponent->readOnly();
+		}
+
 		return !$this->model->id ? $komponent : $komponent->submit()->browse($this->taskRelatedLists());
+	}
+
+	protected function canEditTask()
+	{
+		// Memoized: submitsRefresh() calls this once per field, so without caching
+		// the update policy (assignment query + permission resolution) would run ~10x per render.
+		return $this->canEditTask ??= (!$this->model->id || auth()->user()->can('update', $this->model));
 	}
 
 	protected function taskRelatedLists()
