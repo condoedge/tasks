@@ -50,7 +50,7 @@ abstract class TaskInfoForm extends Form
 					_MiniTitle('tasks.task')->class('mt-4'),
 
 					$this->submitsRefresh(
-						$this->titleInput()
+						($this->canEditTask() && $this->model->id) ? $this->titleInput()->onChange : $this->titleInput()
 					),
 
 					$this->submitsRefresh(
@@ -60,7 +60,7 @@ abstract class TaskInfoForm extends Form
 
 				$this->takeAssignationCard(),
 
-				_Rows(
+				!$this->canEditTask() ? null : _Rows(
 					_MiniTitle('tasks.assigned-to')->class('mt-4'),
 
 					_Panel(
@@ -173,7 +173,8 @@ abstract class TaskInfoForm extends Form
 	protected function submitsRefresh($komponent)
 	{
 		if (!$this->canEditTask()) {
-			return $komponent;
+			return $komponent->disabled()->readOnly()
+				->class('opacity-50');
 		}
 
 		return !$this->model->id ? $komponent : $komponent->submit()->browse($this->taskRelatedLists());
@@ -181,8 +182,6 @@ abstract class TaskInfoForm extends Form
 
 	protected function canEditTask()
 	{
-		// Memoized: submitsRefresh() calls this once per field, so without caching
-		// the update policy (assignment query + permission resolution) would run ~10x per render.
 		return $this->canEditTask ??= (!$this->model->id || auth()->user()->can('update', $this->model));
 	}
 

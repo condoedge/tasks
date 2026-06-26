@@ -72,11 +72,6 @@ class TaskForm extends TaskInfoForm
 		);
 	}
 
-	protected function titleInput()
-	{
-		return !$this->model->id ? parent::titleInput() : parent::titleInput()->onChange;
-	}
-
 	public function taskInfoElements()
 	{
 		return _Rows(
