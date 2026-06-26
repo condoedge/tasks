@@ -62,7 +62,7 @@ class TaskDetailForm extends Form
 		return [
 			_CKEditorExtended()->name('details')->class('ckNoToolbar'),
 			$attachmentsBox,
-	        !auth()->user()->can('create', TaskDetailModel::getClass()) ? null : _FlexEnd2(
+	        !auth()->user()->can('create', [TaskDetailModel::getClass(), $this->task]) ? null : _FlexEnd2(
                 _Flex2 (
 					$attachmentsLink,
 					($this->noTaskClosing || $this->task->isClosed() || !auth()->user()->can('close', $this->task)) ? null :

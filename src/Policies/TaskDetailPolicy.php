@@ -4,7 +4,9 @@ namespace Kompo\Tasks\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Kompo\Tasks\Models\Task;
 use Kompo\Tasks\Models\TaskDetail;
+use Kompo\Auth\Models\Teams\PermissionTypeEnum;
 
 class TaskDetailPolicy
 {
@@ -34,7 +36,7 @@ class TaskDetailPolicy
 
     public function viewFileOf(User $user, TaskDetail $taskDetail)
     {
-        return in_array($user->id, [$taskDetail->added_by, $taskDetail->modified_by, $taskDetail->user_id]);
+        return in_array($user->id, [$taskDetail->added_by, $taskDetail->modified_by, $taskDetail->user_id]) || $this->isTaskAssignedToUser($taskDetail->task, $user);
     }
 
     /**
@@ -43,9 +45,9 @@ class TaskDetailPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Task $task)
     {
-        return $user->hasPermission('taskDetails:create');
+        return $task->created_by == $user->id || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('CreateOthersTaskDetail', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     /**
@@ -57,9 +59,7 @@ class TaskDetailPolicy
      */
     public function update(User $user, TaskDetail $taskDetail)
     {
-        return $taskDetail->created_by == $user->id || 
-            ($taskDetail->task->team_id == $user->current_team_id && $user->hasPermission('taskDetails:updateOfTeam')) ||
-            $user->hasPermission('taskDetails:update');
+        return $taskDetail->created_by == $user->id;
     }
 
     /**
@@ -72,8 +72,7 @@ class TaskDetailPolicy
     public function delete(User $user, TaskDetail $taskDetail)
     {
         return $taskDetail->created_by == $user->id || 
-            ($taskDetail->task->team_id == $user->current_team_id && $user->hasPermission('taskDetails:deleteOfTeam')) ||
-            $user->hasPermission('taskDetails:delete');
+            $user->hasPermission('DeleteOthersTaskDetail', PermissionTypeEnum::WRITE, teamIds: [$taskDetail->task->team_id]);
     }
 
     /**
@@ -98,5 +97,10 @@ class TaskDetailPolicy
     public function forceDelete(User $user, TaskDetail $taskDetail)
     {
         //
+    }
+
+    protected function isTaskAssignedToUser(Task $task, User $user): bool
+    {
+        return $task->assigned_to === $user->id || $task->taskAssignations->flatMap(fn($a) => $a->getAllRelatedTaskUserAssignables())->pluck('id')->contains($user->id);
     }
 }
