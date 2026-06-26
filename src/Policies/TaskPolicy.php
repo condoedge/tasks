@@ -54,7 +54,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return ($task->created_by == $user->id) || $user->hasPermission('UpdateOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
+        return ($task->created_by == $user->id) || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('UpdateOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     /**
@@ -72,12 +72,17 @@ class TaskPolicy
     public function close(User $user, Task $task)
     {
         return $task->created_by == $user->id || 
-            ($task->assigned_to == $user->id) || 
+            $this->isTaskAssignedToUser($task, $user) || 
             ($user->hasPermission('CloseOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]));
     }
 
     public function changeStatus(User $user, Task $task)
     {
-        return $this->update($user, $task) || ($task->assigned_to == $user->id);
+        return $this->update($user, $task) || $this->isTaskAssignedToUser($task, $user);
+    }
+
+    protected function isTaskAssignedToUser(Task $task, User $user): bool
+    {
+        return $task->assigned_to === $user->id || $task->taskAssignations->flatMap(fn($a) => $a->getAllRelatedTaskUserAssignables())->pluck('id')->contains($user->id);
     }
 }
