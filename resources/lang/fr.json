@@ -48,5 +48,6 @@
 	"tasks.visibilities.board": "Membres adultes",
 	"tasks.visibilities.managers": "Gestionnaires",
 	"tasks.with-closed-tasks": "Afficher les tâches terminées",
-	"tasks.you-want-to-take-this-assignation?": "Que voulez-vous faire ?"
+	"tasks.you-want-to-take-this-assignation?": "Que voulez-vous faire ?",
+	"translate.you-cant-move-this-task-because-you-dont-have-permission-or-it-is-not-assigned-to-you": "Vous ne pouvez pas déplacer cette tâche car vous n'avez pas la permission ou elle ne vous est pas assignée."
 }

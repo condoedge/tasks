@@ -51,8 +51,8 @@ class TasksKanban extends TasksMainView
 	{
 		$task = TaskModel::findOrFail(request('id'));
 
-		if(!auth()->user()->can('update', $task))
-			abort(403, __('kompo.unauthorized-action'));
+		if(!auth()->user()->can('changeStatus', $task))
+			abort(403, __('translate.you-cant-move-this-task-because-you-dont-have-permission-or-it-is-not-assigned-to-you'));
 
 		return $task->handleStatusChange(request('status'));
 	}

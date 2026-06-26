@@ -48,5 +48,6 @@
 	"tasks.visibilities.board": "Vonlunteers",
 	"tasks.visibilities.managers": "Managers",
 	"tasks.with-closed-tasks": "Display closed tasks",
-	"tasks.you-want-to-take-this-assignation?": "What do you want to do ?"
+	"tasks.you-want-to-take-this-assignation?": "What do you want to do ?",
+	"translate.you-cant-move-this-task-because-you-dont-have-permission-or-it-is-not-assigned-to-you": "You can't move this task because you don't have permission or it is not assigned to you."
 }

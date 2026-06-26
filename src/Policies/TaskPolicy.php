@@ -72,7 +72,12 @@ class TaskPolicy
     public function close(User $user, Task $task)
     {
         return $task->created_by == $user->id || 
-            ($task->assigned_to == $user->id && $user->can('CloseAssignedTask')) || 
+            ($task->assigned_to == $user->id) || 
             ($user->hasPermission('CloseOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]));
+    }
+
+    public function changeStatus(User $user, Task $task)
+    {
+        return $this->update($user, $task) || ($task->assigned_to == $user->id);
     }
 }
