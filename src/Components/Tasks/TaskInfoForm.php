@@ -173,7 +173,7 @@ abstract class TaskInfoForm extends Form
 	protected function submitsRefresh($komponent)
 	{
 		if (!$this->canEditTask()) {
-			return $komponent->class('pointer-events-none opacity-80');
+			return $komponent;
 		}
 
 		return !$this->model->id ? $komponent : $komponent->submit()->browse($this->taskRelatedLists());
