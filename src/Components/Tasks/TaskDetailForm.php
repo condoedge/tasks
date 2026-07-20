@@ -37,6 +37,11 @@ class TaskDetailForm extends Form
         $this->class($this->prop('injected_class'));
 	}
 
+	public function authorize()
+	{
+		return $this->canEdit();
+	}
+
 	public function beforeSave()
 	{
 		$this->model->setUserId();
