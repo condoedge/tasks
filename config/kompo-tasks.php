@@ -4,6 +4,8 @@ use Kompo\Auth\Facades\UserModel;
 use Kompo\Auth\Facades\RoleModel;
 
 return [
+    'show-team-name-in-task-card' => false,
+
     'task-model-namespace' => Kompo\Tasks\Models\Task::class,
     'task-detail-model-namespace' => Kompo\Tasks\Models\TaskDetail::class,
 

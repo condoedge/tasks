@@ -127,6 +127,16 @@ class Task extends Model implements ScopedToTeam
         return $this->taskDetails()->completed()->count() / $totalSteps;
     }
 
+    public function shouldShowTeamNameInCard()
+    {
+        return config('kompo-tasks.show-team-name-in-task-card', false);
+    }
+
+    public function getTeamNameInCard()
+    {
+        return $this->team->name;
+    }
+
     /* ACTIONS */
     public function applyAssignment(string $class, \Illuminate\Support\Collection $ids): void
     {
@@ -283,10 +293,11 @@ class Task extends Model implements ScopedToTeam
                         //.' ('.$minReminderDate->diffForHumans().')'
                     )->class('text-gray-500 text-xs whitespace-nowrap'),
             ),
+            !$this->shouldShowTeamNameInCard() ? null : _Html($this->getTeamNameInCard())->class('font-semibold text-sm mb-1 mt-2'),
             _Html(
                 ($taskNotified ? '<span class="unreadPill bg-danger"></span> ' : ($taskRead ? '' : '<span class="unreadPill bg-info"></span> ')).
                 $this->title
-            )->class('truncate text-sm mt-2')->class('task-pill'),
+            )->class('truncate text-sm')->class('task-pill'),
             _FlexBetween(
                 _UserImgDate(
                     $this->assignedTo ?: $this->createdBy,
