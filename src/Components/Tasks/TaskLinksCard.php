@@ -28,7 +28,9 @@ class TaskLinksCard extends Query
         $taskable = $taskLink->taskable;
 
         if (!($taskable instanceof Taskable)) {
-            throw new \Exception('Taskable must implement Taskable interface');
+            // Muting exception for now
+            // throw new \Exception('Taskable must implement Taskable interface');
+            return _Html('tasks.incorrect-link')->class('text-gray-600');
         } 
 
         $submenu = $taskable->getSubmenu()?->class('w-72 p-4');
