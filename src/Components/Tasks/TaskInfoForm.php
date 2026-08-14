@@ -117,10 +117,12 @@ abstract class TaskInfoForm extends Form
 		$this->model->takeOwnership(auth()->id());
 	}
 
-	public function searchTeamChildren()
+	public function searchTeamChildren($search = null)
 	{
 		return TeamModel::parseOptions(
-			TeamModel::active()->validForTasks()->whereIn('id', currentTeam()->getAllChildrenRawSolution())->get()
+			TeamModel::active()->validForTasks()
+				->when($search, fn($q) => $q->search($search))
+				->whereIn('id', currentTeam()->getAllChildrenRawSolution())->get()
 		);
 	}
 

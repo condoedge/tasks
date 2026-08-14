@@ -88,7 +88,8 @@ trait HandlesTaskAssignables
         return $this->submitsRefresh(
             $field->name('task_assignable_ids', false)
                 ->placeholder($config['placeholder'] ?? $config['label'])
-                ->options($this->taskAssignableOptions($type))
+                ->ajaxPayload(['type' => $type])
+                ->searchOptions(0, 'searchAssignableOptions', 'retrieveAssignable')
                 ->icon(_Sax($config['icon'] ?? 'profile'))
                 ->value($multiple ? $values : ($values[0] ?? null))
                 ->jsEnableWhen('assignment_type', $type)
@@ -181,8 +182,11 @@ trait HandlesTaskAssignables
             ->values();
     }
 
-    protected function taskAssignableOptions($type)
+    public function searchAssignableOptions()
     {
+        $search = request('search');
+        $type = request('type');
+
         $config = TaskAssignableRegistry::config($type);
         $class = $config['model'];
         $query = $class::query();
@@ -195,7 +199,10 @@ trait HandlesTaskAssignables
             $query->whereHas('teamRoles', fn($q) => $q->where('team_id', $this->selectedTeamId())->asSystemOperation());
         }
 
-        $assignables = $query->asSystemOperation()->take(200)->get();
+        $assignables = $query->asSystemOperation()
+            ->when(method_exists($model, 'scopeSearch'), fn($q) => $q->search($search))
+            ->get();
+            
         $selectedIds = collect($this->selectedAssignableIdsForType($type))
             ->filter(fn($id) => $id !== null && $id !== '')
             ->values();
