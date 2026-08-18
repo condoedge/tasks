@@ -89,7 +89,7 @@ trait HandlesTaskAssignables
             $field->name('task_assignable_ids', false)
                 ->placeholder($config['placeholder'] ?? $config['label'])
                 ->ajaxPayload(['type' => $type])
-                ->searchOptions(0, 'searchAssignableOptions', 'retrieveAssignable')
+                ->searchOptions(0, 'searchAssignableOptions')
                 ->icon(_Sax($config['icon'] ?? 'profile'))
                 ->value($multiple ? $values : ($values[0] ?? null))
                 ->jsEnableWhen('assignment_type', $type)
@@ -184,8 +184,8 @@ trait HandlesTaskAssignables
 
     public function searchAssignableOptions()
     {
-        $search = request('search');
-        $type = request('type');
+        $search = request('search') ?: '';
+        $type = request('type') ?: request('assignment_type');
 
         $config = TaskAssignableRegistry::config($type);
         $class = $config['model'];
@@ -221,8 +221,7 @@ trait HandlesTaskAssignables
         }
 
         return $assignables
-            ->mapWithKeys(fn($assignable) => [$assignable->getIdForTask() => $assignable->display ?? $assignable->name ?? $assignable->getKey()])
-            ->toArray();
+            ->mapWithKeys(fn($assignable) => [$assignable->getIdForTask() => $assignable->display ?? $assignable->name ?? $assignable->getKey()]);
     }
 
     protected function assignableValidationRules()
