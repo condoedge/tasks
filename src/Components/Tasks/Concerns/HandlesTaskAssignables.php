@@ -185,7 +185,11 @@ trait HandlesTaskAssignables
     public function searchAssignableOptions()
     {
         $search = request('search') ?: '';
-        $type = request('type') ?: request('assignment_type');
+        $type = request('type') ?: request('assignment_type') ?: $this->selectedAssignmentType();
+
+        if (!$type || !TaskAssignableRegistry::configs()->has($type)) {
+            return collect([]);
+        }
 
         $config = TaskAssignableRegistry::config($type);
         $class = $config['model'];
