@@ -47,7 +47,7 @@ class TaskDetailPolicy
      */
     public function create(User $user, Task $task)
     {
-        return $task->created_by == $user->id || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('CreateOthersTaskDetail', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
+        return $task->added_by == $user->id || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('CreateOthersTaskDetail', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     /**
@@ -59,7 +59,7 @@ class TaskDetailPolicy
      */
     public function update(User $user, TaskDetail $taskDetail)
     {
-        return $taskDetail->created_by == $user->id;
+        return $taskDetail->added_by == $user->id;
     }
 
     /**
@@ -71,7 +71,7 @@ class TaskDetailPolicy
      */
     public function delete(User $user, TaskDetail $taskDetail)
     {
-        return $taskDetail->created_by == $user->id || 
+        return $taskDetail->added_by == $user->id || 
             $user->hasPermission('DeleteOthersTaskDetail', PermissionTypeEnum::WRITE, teamIds: [$taskDetail->task->team_id]);
     }
 

@@ -150,19 +150,59 @@ abstract class TaskInfoForm extends Form
 
 	protected function visibilityAndOptions()
 	{
+		$visibilities = $this->allowedVisibilities();
+
 		return _Rows(
-			$this->submitsRefresh(
-				_Select()
-	                ->name('visibility')
-	                ->icon(_Sax('eye'))
-	                ->options(TaskVisibilityEnum::optionsWithLabels())
-	                ->default(TaskVisibilityEnum::ALL)
-			),
+			count($visibilities) <= 1
+				? _Hidden()->name('visibility')->value($this->currentVisibility()->value)
+				: $this->submitsRefresh(
+					_Select()
+		                ->name('visibility')
+		                ->icon(_Sax('eye'))
+		                ->options(collect($visibilities)->mapWithKeys(fn ($visibility) => [
+		                	$visibility->value => $visibility->label(),
+		                ]))
+		                ->default($this->currentVisibility()->value)
+				),
 
 			$this->model->id ? $this->submitsRefresh(
 				_Checkbox('tasks.priority')->class('[&>label>.icon-spinner]:hidden')->name('urgent')
 			) : null,
 		);
+	}
+
+	/**
+	 * Levels the user may give a task on the selected team, plus the level it already has —
+	 * otherwise an assignee without the permission could not even save a status change.
+	 *
+	 * @return array<int, TaskVisibilityEnum>
+	 */
+	protected function allowedVisibilities()
+	{
+		$allowed = TaskVisibilityEnum::selectableBy(auth()->user(), $this->selectedTeamId());
+		$current = $this->currentVisibility();
+
+		return in_array($current, $allowed, true) ? $allowed : [...$allowed, $current];
+	}
+
+	protected function currentVisibility(): TaskVisibilityEnum
+	{
+		return $this->model->visibility ?: TaskVisibilityEnum::ALL;
+	}
+
+	/**
+	 * A task the visibility scope hides must not be readable through its link either:
+	 * the level used to filter lists only.
+	 */
+	protected function authorizeVisibility()
+	{
+		if (!$this->model->id) {
+			return;
+		}
+
+		if (!TaskModel::query()->whereKey($this->model->id)->userVisibility()->exists()) {
+			abort(403, __('kompo.unauthorized-action'));
+		}
 	}
 
 	protected function taskLinksCard()
@@ -210,7 +250,7 @@ abstract class TaskInfoForm extends Form
 			'title' => 'required|max:255',
 			'status' => 'required',
 			'team_id' => 'required|exists:teams,id',
-			'visibility' => 'required|in:' . collect(TaskVisibilityEnum::cases())->pluck('value')->join(','),
+			'visibility' => 'required|in:' . collect($this->allowedVisibilities())->pluck('value')->join(','),
 			'assignment_type' => 'required|in:' . TaskAssignableRegistry::configs()->keys()->join(','),
 			'task_assignable_ids' => 'required',
 			'urgent' => 'boolean',

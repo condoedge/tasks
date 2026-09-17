@@ -17,10 +17,12 @@ class TaskForm extends TaskInfoForm
 	public $class = 'bg-white rounded-l-2xl';
 
 	public function created()
-	{		
+	{
         $this->id('task-adding-view');
 
-		$this->style = 
+		$this->authorizeVisibility();
+
+		$this->style =
 			// auth()->user()->isContact() ? 'min-width: 50vw; max-width: 668px' :
 							'min-width: 75vw; max-width: 960px';
 

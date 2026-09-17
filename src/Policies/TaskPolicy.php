@@ -54,7 +54,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return ($task->created_by == $user->id) || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('UpdateOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
+        return ($task->added_by == $user->id) || $this->isTaskAssignedToUser($task, $user) || $user->hasPermission('UpdateOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     /**
@@ -66,12 +66,12 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return ($task->created_by == $user->id) || $user->hasPermission('DeleteOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
+        return ($task->added_by == $user->id) || $user->hasPermission('DeleteOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]);
     }
 
     public function close(User $user, Task $task)
     {
-        return $task->created_by == $user->id || 
+        return $task->added_by == $user->id || 
             $this->isTaskAssignedToUser($task, $user) || 
             ($user->hasPermission('CloseOthersTask', PermissionTypeEnum::WRITE, teamIds: [$task->team_id]));
     }

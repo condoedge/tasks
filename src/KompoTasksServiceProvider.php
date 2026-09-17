@@ -57,10 +57,14 @@ class KompoTasksServiceProvider extends ServiceProvider
             return new (config('kompo-tasks.task-detail-model-namespace'));
         });
 
+        // Class names come from config, never from the facades: resolving them here would
+        // instantiate (and boot) the models during the register phase, before kompo/auth
+        // registers its model plugins — the class would then cache an empty plugin list and
+        // silently run with no security for the rest of the process.
         Relation::morphMap([
             'user' => \App\Models\User::class,
-            'taskDetail' => TaskDetailModel::getClass(),
-            'task' => TaskModel::getClass(),
+            'taskDetail' => config('kompo-tasks.task-detail-model-namespace'),
+            'task' => config('kompo-tasks.task-model-namespace'),
         ]);
     }
 

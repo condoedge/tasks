@@ -29,6 +29,12 @@ class Task extends Model implements ScopedToTeam
         'incomplete_task_details_min_reminder_at' => 'datetime',
     ];
 
+    // The column default is MANAGERS, which silently restricted every task created without
+    // passing through the form (e.g. from an email thread).
+    protected $attributes = [
+        'visibility' => TaskVisibilityEnum::ALL,
+    ];
+
     protected $translatable = [
         'title',
     ];
@@ -189,6 +195,20 @@ class Task extends Model implements ScopedToTeam
     }
 
     /* SCOPES */
+    /**
+     * The people a task concerns, whatever its visibility: its creator, its direct assignee,
+     * and anyone an assignation reaches (a person, or a position they hold).
+     * Wider than scopeMine(), which answers "my to-do list" and drops tasks assigned to others.
+     */
+    public function scopeRelatedToUser($query, $userId)
+    {
+        return $query->where(function ($query) use ($userId) {
+            $query->where('added_by', $userId)
+                ->orWhere('assigned_to', $userId)
+                ->orWhereHas('taskAssignations', fn ($assignationQuery) => $assignationQuery->relatedToUser($userId));
+        });
+    }
+
     public function scopeMine($query)
     {
         $userId = auth()->id();
@@ -241,18 +261,40 @@ class Task extends Model implements ScopedToTeam
         );
     }
 
+    /**
+     * A restricted visibility is an audience defined by a permission held on the task's own
+     * team (TaskVisibilityEnum::permissionKey()), plus the people the task concerns.
+     * A level whose key nobody holds is therefore only visible to those people.
+     */
     public function scopeUserVisibility($query)
     {
-        // if(auth()->user()->isContact()) {
+        $user = auth()->user();
 
-        //     if (auth()->user()->isBoardMember()) {
-        //         return $query->whereIn('visibility', [TaskVisibilityEnum::ALL, TaskVisibilityEnum::BOARD]);
-        //     }
-
+        if (!$user) {
             return $query->where('visibility', TaskVisibilityEnum::ALL);
-        // }
+        }
 
-        // return $query;
+        if (safeIsSuperAdmin()) {
+            return $query;
+        }
+
+        return $query->where(function ($query) use ($user) {
+            $query->where('visibility', TaskVisibilityEnum::ALL);
+
+            foreach (TaskVisibilityEnum::cases() as $visibility) {
+                if (!$permissionKey = $visibility->permissionKey()) {
+                    continue;
+                }
+
+                $query->orWhere(fn ($q) => $q->where('visibility', $visibility)
+                    ->whereIn(
+                        $this->qualifyColumn('team_id'),
+                        $user->getTeamsQueryWithPermission($permissionKey)
+                    ));
+            }
+
+            $query->orWhere(fn ($q) => $q->relatedToUser($user->id));
+        });
     }
 
     public function scopeWithReminderInfo($query)
