@@ -78,7 +78,7 @@ class TaskForm extends TaskInfoForm
 	{
 		return _Rows(
 			parent::taskInfoElements(),
-			$this->model->id ? null : _SubmitButton()->class('mx-4')->browse($this->taskRelatedLists()),
+			$this->model->id ? null : _SubmitButton('generic.save')->class('mx-4')->browse($this->taskRelatedLists()),
 		);
 	}
 
